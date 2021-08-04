@@ -1,0 +1,7 @@
+Material.Indigo		#3F51B5 (default primary)
+Material.Indigo (shade) #9FA8DA (default primary)
+whitesmoke		#f5f5f5
+lightgrey 		#e0e0e0
+grey 			#9E9E9E
+darkred 		#D43A2F
+darkgreen 		#429846

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/exiv2">
+        <file>icon.png</file>
+    </qresource>
+</RCC>
