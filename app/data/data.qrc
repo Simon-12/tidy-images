@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>fonts/RobotoMono-Regular.ttf</file>
+        <file>bitcoin-code.png</file>
+        <file>fonts/Roboto-Regular.ttf</file>
+        <file>fonts/Roboto-Bold.ttf</file>
+        <file>fonts/Roboto-Italic.ttf</file>
+    </qresource>
+</RCC>
