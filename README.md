@@ -4,7 +4,7 @@ Easy sort and organize your image collection
 <br>
 
 [![Paypal](https://img.shields.io/badge/donate-PayPal-blue.svg?style=flat-square&logo=paypal)](https://paypal.me/SimonSchwarzkopf)
-[![Bitcoin](https://img.shields.io/badge/donate-Bitcoin-orange.svg?style=flat-square&logo=bitcoin)](https://github.com/Simon-12/TestImage/blob/develop/app/data/bitcoin-code.png)
+[![Bitcoin](https://img.shields.io/badge/donate-Bitcoin-orange.svg?style=flat-square&logo=bitcoin)](https://github.com/Simon-12/tidy-images/blob/develop/app/data/bitcoin-code.png)
 <br>
 <br>
 
@@ -55,8 +55,8 @@ The application can be extended with plugins. The idea is to reduce dependencie
 
 Plugin |      | Description | Link
 :----: | :--: | :----------- | :----
-**Exiv2** | <img src="https://github.com/Simon-12/TestImage/blob/develop/plugins/exiv2/plugin/icon.png" width="50%"/> | Image metadata library and tools. Is needed for read image metadata (date) and read and write labels to metadata comment section. | [github/exiv2](https://github.com/Exiv2/exiv2)
-**OpenCV** | <img src="https://github.com/Simon-12/TestImage/blob/develop/plugins/opencv/plugin/icon.png" width="40%"/> | Open Source Computer Vision Library. Is needed for read and rotate images, read in single video frames and the image compare algorithm. | [github/opencv](https://github.com/opencv/opencv)
+**Exiv2** | <img src="https://github.com/Simon-12/tidy-images/blob/develop/plugins/exiv2/plugin/icon.png" width="50%"/> | Image metadata library and tools. Is needed for read image metadata (date) and read and write labels to metadata comment section. | [github/exiv2](https://github.com/Exiv2/exiv2)
+**OpenCV** | <img src="https://github.com/Simon-12/tidy-images/blob/develop/plugins/opencv/plugin/icon.png" width="40%"/> | Open Source Computer Vision Library. Is needed for read and rotate images, read in single video frames and the image compare algorithm. | [github/opencv](https://github.com/opencv/opencv)
 
 <br>
 
@@ -102,6 +102,6 @@ If you like the application and want to support, you can donate via:
 
 PayPal | Bitcoin
 :----: | :-----:
-[![Paypal img](https://github.com/Simon-12/TestImage/blob/develop/app/icons/flaticon/paypal.png)](https://paypal.me/SimonSchwarzkopf) | <img src="https://github.com/Simon-12/TestImage/blob/develop/app/data/bitcoin-code.png" width="40%"/><br>**bc1qll43hkqvv9jjwqw54xhejw324q4t4t55p8ss9e**
+[![Paypal img](https://github.com/Simon-12/tidy-images/blob/develop/app/icons/flaticon/paypal.png)](https://paypal.me/SimonSchwarzkopf) | <img src="https://github.com/Simon-12/tidy-images/blob/develop/app/data/bitcoin-code.png" width="40%"/><br>**bc1qll43hkqvv9jjwqw54xhejw324q4t4t55p8ss9e**
 
 <br>
