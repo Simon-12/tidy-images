@@ -4,7 +4,7 @@ Easily sort and organise your image collection.
 <br>
 
 [![Paypal](https://img.shields.io/badge/donate-PayPal-blue.svg?style=flat-square&logo=paypal)](https://paypal.me/SimonSchwarzkopf)
-[![Bitcoin](https://img.shields.io/badge/donate-Bitcoin-orange.svg?style=flat-square&logo=bitcoin)](https://github.com/Simon-12/TestImage/blob/develop/app/data/bitcoin-code.png)
+[![Bitcoin](https://img.shields.io/badge/donate-Bitcoin-orange.svg?style=flat-square&logo=bitcoin)](https://github.com/Simon-12/tidy-images/blob/develop/app/data/bitcoin-code.png)
 <br>
 <br>
 
@@ -34,12 +34,12 @@ All actions can be Undo or Redo.
 
 <details>
 <summary><b>Move Folders Example ...</b></summary>
-<img src="https://github.com/Simon-12/common/blob/main/tidy-images/02.gif" width="65%"/>
+<img src="https://github.com/Simon-12/common/blob/main/tidy-images/02.gif"/>
 </details>
 
 <details>
 <summary><b>Add Folder Example ...</b></summary>
-<img src="https://github.com/Simon-12/common/blob/main/tidy-images/03.gif" width="65%"/>
+<img src="https://github.com/Simon-12/common/blob/main/tidy-images/03.gif"/>
 </details>
 
 <br>
@@ -52,7 +52,7 @@ Files with labels are automatically added to the database.
 
 <details>
 <summary><b>Label Example ...</b></summary>
-<img src="https://github.com/Simon-12/common/blob/main/tidy-images/04.png" width="65%"/>
+<img src="https://github.com/Simon-12/common/blob/main/tidy-images/04.png"/>
 </details>
 
 <br>
@@ -66,7 +66,7 @@ Currently supported database driver is SQLite.
 
 <details>
 <summary><b>Database Example ...</b></summary>
-<img src="https://github.com/Simon-12/common/blob/main/tidy-images/05.png" width="65%"/>
+<img src="https://github.com/Simon-12/common/blob/main/tidy-images/05.png"/>
 </details>
 
 <br>
@@ -78,7 +78,7 @@ To find similar images, images can be compared using an algorithm (the algorithm
 
 <details>
 <summary><b>Compare Example ...</b></summary>
-<img src="https://github.com/Simon-12/common/blob/main/tidy-images/06.png" width="65%"/>
+<img src="https://github.com/Simon-12/common/blob/main/tidy-images/06.png"/>
 </details>
 
 <br>
@@ -93,8 +93,8 @@ Currently there are two plugins available.
 
 Plugin |      | Description | Link
 :----: | :--: | :----------- | :----
-**Exiv2** | <img src="https://github.com/Simon-12/TestImage/blob/develop/plugins/exiv2/plugin/icon.png" width="50%"/> | Image metadata library and tools. It is used to read image metadata such as recording date and to read and write labels to the metadata comment section. | [github/exiv2](https://github.com/Exiv2/exiv2)
-**OpenCV** | <img src="https://github.com/Simon-12/TestImage/blob/develop/plugins/opencv/plugin/icon.png" width="40%"/> | Open Source Computer Vision Library. Is required for reading and rotating images, read in single video frames to display a video thumbnail, and the image comparison algorithm. | [github/opencv](https://github.com/opencv/opencv)
+**Exiv2** | <img src="https://github.com/Simon-12/tidy-images/blob/develop/plugins/exiv2/plugin/icon.png" width="50%"/> | Image metadata library and tools. It is used to read image metadata such as recording date and to read and write labels to the metadata comment section. | [github/exiv2](https://github.com/Exiv2/exiv2)
+**OpenCV** | <img src="https://github.com/Simon-12/tidy-images/blob/develop/plugins/opencv/plugin/icon.png" width="40%"/> | Open Source Computer Vision Library. Is required for reading and rotating images, read in single video frames to display a video thumbnail, and the image comparison algorithm. | [github/opencv](https://github.com/opencv/opencv)
 
 <br>
 
@@ -148,6 +148,6 @@ If you like the application and would like to support it, you can donate via:
 
 PayPal | Bitcoin
 :----: | :-----:
-[![Paypal img](https://github.com/Simon-12/TestImage/blob/develop/app/icons/flaticon/paypal.png)](https://paypal.me/SimonSchwarzkopf) | <img src="https://github.com/Simon-12/TestImage/blob/develop/app/data/bitcoin-code.png" width="40%"/><br>**bc1qll43hkqvv9jjwqw54xhejw324q4t4t55p8ss9e**
+[![Paypal img](https://github.com/Simon-12/tidy-images/blob/develop/app/icons/flaticon/paypal.png)](https://paypal.me/SimonSchwarzkopf) | <img src="https://github.com/Simon-12/tidy-images/blob/develop/app/data/bitcoin-code.png" width="40%"/><br>**bc1qll43hkqvv9jjwqw54xhejw324q4t4t55p8ss9e**
 
 <br>
