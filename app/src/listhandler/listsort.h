@@ -1,22 +1,18 @@
 #ifndef LISTSORT_H
 #define LISTSORT_H
 
-#include <QObject>
 #include <QDebug>
+#include <QObject>
 
-#include "basefile/imagefile.h"
-#include "settings.h"
+#include "basefile/basefile.h"
 #include "options.h"
 
 /*!
  * \brief The ListSort class:
  * Static functions to sort the file list.
  */
-class ListSort
-{
-
-public:    
-
+class ListSort {
+public:
     static Order actual_order;
     static Direction actual_direction;
 
@@ -26,13 +22,12 @@ public:
     void static showList(FileList* fileList);
 
 private:
+    template <class T>
+    static void sortList(FileList* fileList, QMap<int, T*>& map);
+    template <class T>
+    static bool sortFunction(T* left, T* right);
 
-    template <class T> static void sortList(FileList* fileList, QMap<int, T*> &map);
-    template <class T> static bool sortFunction(T *left, T *right);
-
-    explicit ListSort()
-    {
-    }
+    explicit ListSort() {}
 };
 
-#endif // LISTSORT_H
+#endif  // LISTSORT_H

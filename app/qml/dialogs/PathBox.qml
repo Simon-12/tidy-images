@@ -1,8 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import "../components"
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
+import "../components"
 
 // Item with path and buttons
 Item {
@@ -14,7 +14,7 @@ Item {
     property string name
     property string icon
     property string path
-    signal browse()
+    signal browse
 
     Rectangle {
 
@@ -39,7 +39,7 @@ Item {
             Label {
                 text: root.name
                 font.bold: true
-                font.pointSize: 11
+                font.pointSize: 12
                 verticalAlignment: Text.AlignVCenter
                 Layout.preferredHeight: root.height
                 Layout.preferredWidth: 85
@@ -47,7 +47,7 @@ Item {
 
             TextField {
                 text: root.path
-                font.pointSize: 9
+                font.pointSize: 10
                 onAccepted: root.browse()
                 onEditingFinished: text = root.path
                 selectByMouse: true

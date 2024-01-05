@@ -1,8 +1,7 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 import "../components"
-
 
 // Label item with text
 Item {
@@ -13,7 +12,7 @@ Item {
     property int offset: 22
     property string text
     property int duration: 300
-    signal clicked()
+    signal clicked
 
     // Label background
     Rectangle {
@@ -49,24 +48,63 @@ Item {
 
     state: "open"
     states: [
-        State { name: "open" },
-        State { name: "close"
-            PropertyChanges { target: label; width: 0 }
-            PropertyChanges { target: removeButton; width: 0 }
-            PropertyChanges { target: box; opacity: 0 }
-            PropertyChanges { target: root; offset: 0 }
+        State {
+            name: "open"
+        },
+        State {
+            name: "close"
+            PropertyChanges {
+                target: label
+                width: 0
+            }
+            PropertyChanges {
+                target: removeButton
+                width: 0
+            }
+            PropertyChanges {
+                target: box
+                opacity: 0
+            }
+            PropertyChanges {
+                target: root
+                offset: 0
+            }
         }
     ]
     transitions: [
         Transition {
-            from: "open"; to: "close"
+            from: "open"
+            to: "close"
             SequentialAnimation {
-                PropertyAction { target: root; property: "ListView.delayRemove"; value: true }
-                PropertyAnimation { target: label; property: "width"; duration: root.duration / 2 }
-                PropertyAnimation { target: removeButton; property: "width"; duration: root.duration / 2 }
-                OpacityAnimator { target: box; duration: root.duration }
-                PropertyAnimation { target: root; property: "offset"; duration: root.duration / 2 }
-                PropertyAction { target: root; property: "ListView.delayRemove"; value: false }
+                PropertyAction {
+                    target: root
+                    property: "ListView.delayRemove"
+                    value: true
+                }
+                PropertyAnimation {
+                    target: label
+                    property: "width"
+                    duration: root.duration / 2
+                }
+                PropertyAnimation {
+                    target: removeButton
+                    property: "width"
+                    duration: root.duration / 2
+                }
+                OpacityAnimator {
+                    target: box
+                    duration: root.duration
+                }
+                PropertyAnimation {
+                    target: root
+                    property: "offset"
+                    duration: root.duration / 2
+                }
+                PropertyAction {
+                    target: root
+                    property: "ListView.delayRemove"
+                    value: false
+                }
             }
         }
     ]

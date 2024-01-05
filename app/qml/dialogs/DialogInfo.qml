@@ -1,11 +1,10 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls.Material 2.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
-import qml.applicationinfo 1.0
+import qml.components
 import "../components"
-
 
 // Popup with infos about the application
 PopupDefault {
@@ -66,7 +65,7 @@ PopupDefault {
                             Layout.alignment: Qt.AlignHCenter
                             ButtonDefault {
                                 implicitWidth: 100
-                                onClicked: Qt.openUrlExternally(info.paypal);
+                                onClicked: Qt.openUrlExternally(info.paypal)
                                 ImageDefault {
                                     width: parent.width - 30
                                     height: width
@@ -145,40 +144,78 @@ PopupDefault {
             }
 
             // Icon page
-            ListView {
-                id: view
-                spacing: 7
+            ScrollView {
                 clip: true
-                ScrollBar.vertical: ScrollBar { }
+                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
-                model: info.model
-                delegate: Pane {
-                    width: view.width
-                    height: 30
-                    padding: 0
-                    Material.elevation: 5
+                Column {
+                    anchors.fill: parent
+                    spacing: 15
 
-                    RowLayout {
-                        anchors.fill: parent
-                        anchors.leftMargin: 10
-                        anchors.rightMargin: 30
-                        ImageDefault {
-                            Layout.preferredWidth: 20
-                            Layout.preferredHeight: 20
-                            source: model.icon
-                        }
-                        Item {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 20
-                            LabelLink {
-                                showTooltip: true
-                                anchors.centerIn: parent
-                                text: model.name
-                            }
+                    Row {
+                        width: parent.width
+                        Label {
+                            text: "Font"
+                            width: 50
+                            height: 30
+                            font.bold: true
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
                         }
                         LabelLink {
-                            showTooltip: true
-                            text: model.author
+                            width: 150
+                            height: 30
+                            text: info.font
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                    }
+
+                    Label {
+                        text: "Icons"
+                        width: parent.width
+                        font.bold: true
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    ListView {
+                        id: view
+                        spacing: 7
+                        clip: true
+                        interactive: false
+                        width: parent.width
+                        height: contentHeight
+
+                        model: info.model
+                        delegate: Pane {
+                            width: view.width
+                            height: 30
+                            padding: 0
+                            Material.elevation: 5
+
+                            RowLayout {
+                                anchors.fill: parent
+                                anchors.leftMargin: 10
+                                anchors.rightMargin: 30
+                                ImageDefault {
+                                    Layout.preferredWidth: 20
+                                    Layout.preferredHeight: 20
+                                    source: model.icon
+                                }
+                                Item {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 20
+                                    LabelLink {
+                                        showTooltip: true
+                                        anchors.centerIn: parent
+                                        text: model.name
+                                    }
+                                }
+                                LabelLink {
+                                    showTooltip: true
+                                    text: model.author
+                                }
+                            }
                         }
                     }
                 }
@@ -203,7 +240,8 @@ PopupDefault {
                 font.capitalization: Font.MixedCase
             }
             TabButton {
-                text: "Icons"
+                text: "References"
+                font.pointSize: 10
                 font.capitalization: Font.MixedCase
             }
         }
@@ -211,8 +249,8 @@ PopupDefault {
 
     PopupDefault {
         id: btc
-        onOpened: address.objectName = "item unlock";
-        onClosed: address.objectName = "item lock";
+        onOpened: address.objectName = "item unlock"
+        onClosed: address.objectName = "item lock"
 
         Column {
             anchors.fill: parent

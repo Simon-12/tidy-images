@@ -1,9 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
-import qml.options 1.0
+import qml.components
 import "../components"
-
 
 // MenuBar with: Options / Mode / Folders / Info
 MenuBar {
@@ -12,32 +11,32 @@ MenuBar {
     property var mode
     property bool database
 
-    signal dlgNewFolder()
-    signal dlgSettings()
-    signal dlgHistory()
-    signal undo()
-    signal redo()
-    signal folderImages()
-    signal folderFavorites()
-    signal folderTrash()
-    signal refreshUI()
+    signal dlgNewFolder
+    signal dlgSettings
+    signal dlgHistory
+    signal undo
+    signal redo
+    signal folderImages
+    signal folderFavorites
+    signal folderTrash
+    signal refreshUI
     signal changeMode(var newMode)
-    signal changePath()
-    signal dlgInfo()
-    signal dlgPlugins()
-    signal openWebsite()
+    signal changePath
+    signal dlgInfo
+    signal dlgPlugins
+    signal openWebsite
 
     Menu {
         title: "Options"
 
         MenuDefault {
             text: "Change Path"
-            icon.source:  "qrc:/icons/flaticon/folder.png"
+            icon.source: "qrc:/icons/flaticon/folder.png"
             onTriggered: root.changePath()
         }
         MenuDefault {
             text: "Settings"
-            icon.source:  "qrc:/icons/flaticon/settings.png"
+            icon.source: "qrc:/icons/flaticon/settings.png"
             onTriggered: root.dlgSettings()
         }
         MenuDefault {
@@ -92,7 +91,7 @@ MenuBar {
                 root.changeMode(Options.Video)
                 modeMenu.dismiss() // Close menu
             }
-        }        
+        }
         MenuCheckBox {
             text: "Compare"
             icon.source: "qrc:/icons/flaticon/compare.png"

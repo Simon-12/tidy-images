@@ -1,13 +1,12 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
+import QtQuick
+import QtQuick.Controls
 
 // Database header filter field
 Item {
 
     id: root
     property string filter
-    signal finished()
+    signal finished
 
     TextField {
 

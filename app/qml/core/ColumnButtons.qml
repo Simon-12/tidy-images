@@ -1,11 +1,10 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls.Material 2.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
-import qml.options 1.0
+import qml.components
 import "../components"
-
 
 // Column with buttons on right side
 Pane {
@@ -17,20 +16,22 @@ Pane {
     property bool isFullscreen
     property var mode
     property var model
-    signal indexUp()
-    signal indexDown()
-    signal cmbOrder(var order)
-    signal cmbDirection(var direction)
-    signal btnFavorit()
-    signal btnCopy()
-    signal btnDelete()
-    signal btnRotate(var direction)
-    signal btnFolder(var path)
-    signal btnClear()
+    signal indexUp
+    signal indexDown
+    signal cmbOrder(int order)
+    signal cmbDirection(int direction)
+    signal btnFavorit
+    signal btnCopy
+    signal btnDelete
+    signal btnRotate(bool direction)
+    signal btnFolder(string path)
+    signal btnClear
+    signal btnAddFolder
 
     Material.elevation: 5
     Layout.fillHeight: true
-    visible: mode === Options.Image || mode === Options.Video || mode === Options.Gallery
+    visible: mode === Options.Image || mode === Options.Video
+             || mode === Options.Gallery
 
     ColumnLayout {
         anchors.fill: parent
@@ -51,7 +52,7 @@ Pane {
                 model: ["Name", "Type", "Recorded", "Created", "Modified"]
                 onCurrentIndexChanged: {
                     root.cmbOrder(currentIndex) // currentIndex is property
-                    if(currentIndex <= 1)
+                    if (currentIndex <= 1)
                         boxOrder.model = ["A - Z", "Z - A"]
                     else
                         boxOrder.model = ["Old - New", "New - Old"]
@@ -62,7 +63,8 @@ Pane {
                 // Direction
                 id: boxOrder
                 model: ["A - Z", "Z - A"]
-                onCurrentIndexChanged: root.cmbDirection(currentIndex) // currentIndex is property
+                onCurrentIndexChanged: root.cmbDirection(
+                                           currentIndex) // currentIndex is property
             }
 
             Item {
@@ -118,15 +120,16 @@ Pane {
 
             ButtonDefault {
                 text: "Clear"
-                iconSize: 24
-                icon.source: "qrc:/icons/material/square.png"
+                iconSize: 21
+                icon.source: "qrc:/icons/material/square.svg"
                 visible: root.isGallery
                 onClicked: root.btnClear()
             }
 
             ButtonDefault {
                 text: "Favorit"
-                icon.source: root.favorite || root.isGallery ? "qrc:/icons/flaticon/star_1.png" : "qrc:/icons/flaticon/star_2.png"
+                icon.source: root.favorite
+                             || root.isGallery ? "qrc:/icons/flaticon/star_1.png" : "qrc:/icons/flaticon/star_2.png"
                 onClicked: root.btnFavorit()
             }
 
@@ -154,7 +157,8 @@ Pane {
             Layout.preferredWidth: parent.width
             Layout.fillHeight: true
             model: root.model
-            onClick: root.btnFolder(path)
+            onClick: path => root.btnFolder(path)
+            onAddFolder: root.btnAddFolder()
         }
     }
 }

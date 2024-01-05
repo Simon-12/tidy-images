@@ -1,12 +1,12 @@
 #ifndef COMPARELIST_H
 #define COMPARELIST_H
 
-#include <QObject>
 #include <QDebug>
 #include <QElapsedTimer>
-#include <QtConcurrent>
 #include <QFuture>
 #include <QFutureWatcher>
+#include <QObject>
+#include <QtConcurrent>
 
 #include "plugins/visionplugin.h"
 #include "settings.h"
@@ -16,17 +16,15 @@
  * \brief The CompareList class:
  * Compare class for the file list, handels the compare thread.
  */
-class CompareList : public QObject
-{
+class CompareList : public QObject {
     Q_OBJECT
 
 public:
-
-    explicit CompareList(FileList* list, Settings set, QObject *parent = nullptr);
+    explicit CompareList(FileList* list, Settings set, QObject* parent = nullptr);
 
     void startCompare(int index);
     void stopCompare();
-    TableModel* tableModel(){ return m_tableModel; }
+    TableModel* tableModel() { return m_tableModel; }
     void setPlugin(VisionPlugin* plugin);
 
 signals:
@@ -35,7 +33,6 @@ signals:
     void compareFinished();
 
 private:
-
     FileList* m_fileList;
     TableModel* m_tableModel;
     QElapsedTimer m_timer;
@@ -50,7 +47,6 @@ private slots:
     void startedCompare();
     void compareIndex(int index);
     void finishedCompare();
-
 };
 
-#endif // COMPARELIST_H
+#endif  // COMPARELIST_H

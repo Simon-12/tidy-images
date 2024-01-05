@@ -1,11 +1,10 @@
 #include "comparelist.h"
 
+#include "../basefile/imagefile.h"
 
 VisionPlugin* CompareList::m_plugin = nullptr;
 
-
-CompareList::CompareList(FileList* list, Settings set, QObject *parent) : QObject(parent)
-{
+CompareList::CompareList(FileList* list, Settings set, QObject* parent) : QObject(parent) {
     m_fileList = list;
     m_tableModel = new TableModel(m_fileList, set.threshold, this);
 
@@ -14,28 +13,22 @@ CompareList::CompareList(FileList* list, Settings set, QObject *parent) : QObjec
     connect(&m_watcherCompare, &QFutureWatcher<double>::finished, this, &CompareList::finishedCompare);
 }
 
-
-void CompareList::startCompare(int index)
-{
-    if(!m_plugin)
-    {
+void CompareList::startCompare(int index) {
+    if (!m_plugin) {
         qCritical() << "No vision plugin installed";
         return;
     }
 
     qInfo() << "Start Compare";
     QStringList list;
-    for(int i = 0; i < m_fileList->size(); i++)
-    {
+    for (int i = 0; i < m_fileList->size(); i++) {
         QString file = *m_fileList->at(i)->path();
         list << file;
 
-        if(i == index)
-        {
-            if(m_plugin->initMatching(file))
+        if (i == index) {
+            if (m_plugin->initMatching(file))
                 qInfo() << "Init matching";
-            else
-            {
+            else {
                 qInfo() << "Error at init matching";
                 return;
             }
@@ -46,44 +39,30 @@ void CompareList::startCompare(int index)
     m_watcherCompare.setFuture(m_futureCompare);
 }
 
-
-void CompareList::stopCompare()
-{
+void CompareList::stopCompare() {
     m_watcherCompare.cancel();
     m_watcherCompare.waitForFinished();
 }
 
-
-void CompareList::setPlugin(VisionPlugin *plugin)
-{
+void CompareList::setPlugin(VisionPlugin* plugin) {
     m_plugin = plugin;
     m_tableModel->setActive(m_plugin != nullptr);
 }
 
-
-double CompareList::compareImage(QString path) // static
+double CompareList::compareImage(QString path)  // static
 {
     return m_plugin->matchImage(path);
 }
 
+void CompareList::startedCompare() { m_timer.start(); }
 
-void CompareList::startedCompare()
-{
-    m_timer.start();
-}
-
-
-void CompareList::compareIndex(int index)
-{
+void CompareList::compareIndex(int index) {
     qInfo() << "Compare step:" << index;
     emit compareStep();
 }
 
-
-void CompareList::finishedCompare()
-{
-    if(m_futureCompare.isCanceled())
-    {
+void CompareList::finishedCompare() {
+    if (m_futureCompare.isCanceled()) {
         qInfo() << "Stopped Compare";
         return;
     }
@@ -93,8 +72,7 @@ void CompareList::finishedCompare()
 
     // Get results and set score
     QList<double> list = m_futureCompare.results();
-    for(int i = 0; i < m_fileList->size(); i++)
-    {
+    for (int i = 0; i < m_fileList->size(); i++) {
         ImagePtr file = m_fileList->at(i).staticCast<ImageFile>();
         file->setScore(list[i]);
     }

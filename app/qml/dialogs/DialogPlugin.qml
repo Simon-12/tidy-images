@@ -1,10 +1,9 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls.Material 2.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
 import "../components"
-
 
 // Popup with infos about the installed plugins
 PopupDefault {
@@ -51,7 +50,7 @@ PopupDefault {
 
                         Label {
                             text: model.name
-                            font.pointSize: 11
+                            font.pointSize: 12
                             font.bold: true
                         }
                         Label {

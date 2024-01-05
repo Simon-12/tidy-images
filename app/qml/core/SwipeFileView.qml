@@ -1,8 +1,7 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 import "../core"
-
 
 // SwipeView with images and videos
 Item {
@@ -11,10 +10,10 @@ Item {
     property var model
     property int index
     property int bufferSize
-    signal indexUp()
-    signal indexDown()
-    signal newIndex(var index)
-    signal imageLoaded(var image)
+    signal indexUp
+    signal indexDown
+    signal newIndex(int index)
+    signal imageLoaded(int image)
 
     // Avoid binding loop
     Component.onCompleted: swipeView.setCurrentIndex(0)
@@ -24,21 +23,39 @@ Item {
     onIndexUp: swipeView.incrementCurrentIndex()
     onIndexDown: swipeView.decrementCurrentIndex()
 
-    function seekUp() {
+    function selectItem() {
         // Access the current item: Repeater -> Loader[0] -> Item
-        container.itemAt(swipeView.currentIndex).children[0].seekUp()
+        return container.itemAt(swipeView.currentIndex).children[0]
+    }
+
+    function seekUp() {
+        var item = selectItem()
+        if (item)
+            item.seekUp()
     }
 
     function seekDown() {
-        container.itemAt(swipeView.currentIndex).children[0].seekDown()
+        var item = selectItem()
+        if (item)
+            item.seekDown()
     }
 
     function pause() {
-        container.itemAt(swipeView.currentIndex).children[0].pause()
+        var item = selectItem()
+        if (item)
+            item.pause()
+    }
+
+    function close() {
+        var item = selectItem()
+        if (item)
+            item.close()
     }
 
     function rotateImage(direction) {
-        container.itemAt(swipeView.currentIndex).children[0].rotateImage(direction)
+        var item = selectItem()
+        if (item)
+            item.rotateImage(direction)
     }
 
     SwipeView {
@@ -56,7 +73,9 @@ Item {
             delegate: Loader {
                 id: loader
                 property bool isCurrentItem: SwipeView.isCurrentItem
-                active: Math.abs(swipeView.currentIndex - index) < root.bufferSize && model.type !== undefined
+                active: Math.abs(
+                            swipeView.currentIndex - index) < root.bufferSize
+                        && model.type !== undefined
                 sourceComponent: FileItem {
                     type: model.type
                     path: model.path

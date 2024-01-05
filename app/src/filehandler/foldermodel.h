@@ -1,23 +1,20 @@
 #ifndef FOLDERMODEL_H
 #define FOLDERMODEL_H
 
-#include <QObject>
-#include <QDebug>
 #include <QAbstractListModel>
+#include <QDebug>
+#include <QObject>
 
-#include "../support.h"
 #include "folderitem.h"
 
 /*!
  * \brief The FolderModel class:
  * Shows the folder name, path and selected state.
  */
-class FolderModel : public QAbstractListModel
-{
+class FolderModel : public QAbstractListModel {
     Q_OBJECT
 
 public:
-
     explicit FolderModel(QObject *parent = nullptr);
 
     FolderItem getItem(const int index) const;
@@ -25,12 +22,7 @@ public:
     bool contains(QString folder);
     void append(const FolderItem &folder);
 
-    enum FolderRoles
-    {
-        NameRole = Qt::UserRole + 1,
-        PathRole,
-        SelectedRole
-    };
+    enum FolderRoles { NameRole = Qt::UserRole + 1, PathRole, SelectedRole };
 
 public slots:
 
@@ -45,16 +37,14 @@ signals:
 
     // QAbstractItemModel interface
 public:
-
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
-    QHash<int, QByteArray> roleNames() const;    
+    QHash<int, QByteArray> roleNames() const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role);
 
 private:
-
-    QVector<FolderItem> m_items;
+    QList<FolderItem> m_items;
 };
 
-#endif // FOLDERMODEL_H
+#endif  // FOLDERMODEL_H

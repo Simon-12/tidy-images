@@ -5,5 +5,6 @@
         <file>fonts/Roboto-Regular.ttf</file>
         <file>fonts/Roboto-Bold.ttf</file>
         <file>fonts/Roboto-Italic.ttf</file>
+        <file>fonts/reference.txt</file>
     </qresource>
 </RCC>

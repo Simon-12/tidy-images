@@ -1,6 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
+import QtQuick
+import QtQuick.Controls
 
 // Compare table
 Row {
@@ -25,13 +24,14 @@ Row {
             implicitWidth: model.column === 0 ? 75 : 250
             implicitHeight: 25
             border.width: 1
-            border.color: (model.column === 0 || model.row === 0) ? "transparent" : "black"
+            border.color: (model.column === 0
+                           || model.row === 0) ? "transparent" : "black"
             color: model.color
 
             Text {
                 text: model.text
                 font.bold: model.column === 0 || model.row === 0
-                font.pointSize: 11
+                font.pointSize: 12
                 anchors.centerIn: parent
             }
         }

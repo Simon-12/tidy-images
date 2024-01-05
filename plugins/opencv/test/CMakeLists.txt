@@ -1,40 +1,52 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 
-project(opencv_test LANGUAGES CXX)
+project(
+  opencv-test
+  LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+enable_testing(true)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
+find_package(
+  Qt6 6.2
+  COMPONENTS Core Test
+  REQUIRED)
 
-# - - - For static plugin
-#set(CMAKE_CXX_FLAGS_RELEASE "/MT")
-#set("OpenCV_DIR" "E:/libs/opencv-4.5.3/release/x86/vc16/staticlib") # Win32
-#find_package(OpenCV REQUIRED)
-# - - -
+if(APP_STATIC_PLUGINS)
+  set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+  find_package(OpenCV REQUIRED)
+  add_definitions(-DAPP_STATIC_PLUGINS)
+endif()
 
-# - - - Use headers from main project
+add_executable(
+  opencv-test
+  test.h
+  test.cpp
+  # Use files from main project
+  ../../../app/src/plugins/baseplugin.h
+  ../../../app/src/plugins/visionplugin.h
+  ../../../app/src/plugins/visionplugin.cpp)
+
+# Use files from main project
 include_directories(../../../app/src/plugins)
 
-add_executable(opencv_test
-    main.cpp
-    # - - - Use headers from main project
-    ../../../app/src/plugins/baseplugin.h
-    ../../../app/src/plugins/visionplugin.h
-    ../../../app/src/plugins/visionplugin.cpp
-    )
+target_link_libraries(
+  opencv-test Qt6::Core Qt6::Test)
 
-target_link_libraries(opencv_test Qt${QT_VERSION_MAJOR}::Core)
+if(APP_STATIC_PLUGINS)
+  target_link_libraries(
+    opencv-test
+    Qt6::Core
+    Qt6::Test
+    opencv_plugin
+    ${OpenCV_LIBS})
+endif()
 
-# - - - For static plugin
-#target_link_libraries(opencv_test
-#    Qt${QT_VERSION_MAJOR}::Core
-#    ${CMAKE_BINARY_DIR}/plugin/opencv_plugin.lib
-#    ${OpenCV_LIBS})
+# Copy samples
+file(GLOB samples "../../../samples/*")
+file(COPY ${samples} DESTINATION "../samples")

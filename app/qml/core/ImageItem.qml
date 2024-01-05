@@ -1,8 +1,7 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 import "../components"
-
 
 // Image main item
 Item {
@@ -11,13 +10,14 @@ Item {
     property string source
     property alias fillMode: image.fillMode
     property alias sourceSize: image.sourceSize
-    signal clicked()
-    signal indexUp()
-    signal indexDown()
-    signal imageLoaded()
+    property double direction
+    signal clicked
+    signal indexUp
+    signal indexDown
+    signal imageLoaded
 
     onSourceChanged: {
-        if(!source)
+        if (!source)
             image.source = "" // undefined
         else
             image.source = source
@@ -27,8 +27,11 @@ Item {
 
         id: image
         anchors.centerIn: parent
-        width: ( rotation == 90 || rotation == 270 ) ? parent.height : parent.width
-        height: ( rotation == 90 || rotation == 270 ) ? parent.width : parent.height
+        rotation: root.direction
+        width: (root.direction === 90
+                || root.direction === 270) ? parent.height : parent.width
+        height: (root.direction === 90
+                 || root.direction === 270) ? parent.width : parent.height
 
         onStatusChanged: {
             if (status == Image.Ready)
@@ -59,26 +62,25 @@ Item {
             anchors.fill: parent
 
             onDoubleClicked: root.clicked()
-            onWheel: {
-                if(wheel.angleDelta.y > 0) root.indexUp()
-                if(wheel.angleDelta.y < 0) root.indexDown()
+            onWheel: function (wheel) {
+                if (wheel.angleDelta.y > 0)
+                    root.indexUp()
+                if (wheel.angleDelta.y < 0)
+                    root.indexDown()
             }
         }
     }
 
     // Rotate image in given direction
     function setRotation(direction) {
-        if(direction)
-        {
-            image.rotation += 90
-            if(image.rotation == 360)
-                image.rotation = 0
-        }
-        else
-        {
-            image.rotation -= 90
-            if(image.rotation < 0)
-                image.rotation = 270
+        if (direction) {
+            root.direction += 90
+            if (root.direction == 360)
+                root.direction = 0
+        } else {
+            root.direction -= 90
+            if (root.direction < 0)
+                root.direction = 270
         }
     }
 }

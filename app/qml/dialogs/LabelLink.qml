@@ -1,6 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
+import QtQuick
+import QtQuick.Controls
 
 // Label with link and tooltip
 Label {
@@ -12,13 +11,13 @@ Label {
     verticalAlignment: Text.AlignVCenter
     horizontalAlignment: Text.AlignHCenter
 
-    onLinkActivated: Qt.openUrlExternally(link)
-    onHoveredLinkChanged: {
-        if(!showTooltip) return
-        if(link == "")
+    onLinkActivated: link => Qt.openUrlExternally(link)
+    onHoveredLinkChanged: function (link) {
+        if (!showTooltip)
+            return
+        if (link === "")
             tooltip.visible = false
-        else
-        {
+        else {
             tooltip.visible = true
             label.text = link
         }

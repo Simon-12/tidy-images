@@ -1,6 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
+import QtQuick
+import QtQuick.Controls
 
 // Dragable button for ListView
 Rectangle {
@@ -10,8 +9,8 @@ Rectangle {
     property Item dragParent
     property string text
     property int itemIndex
-    signal click()
-    signal moveItem(var key, var target)
+    signal click
+    signal moveItem(string key, int target)
 
     anchors {
         horizontalCenter: parent.horizontalCenter
@@ -28,14 +27,13 @@ Rectangle {
     DragHandler {
         id: dragHandler
 
-        // Workaround caus onDropped do not work
+        // If dragging is over, check index and move
         property int startIndex
         onActiveChanged: {
-            if(active)
+            if (active)
                 startIndex = root.itemIndex
-            else
-                if(startIndex !== root.itemIndex)
-                    root.moveItem(root.text, root.itemIndex)
+            else if (startIndex !== root.itemIndex)
+                root.moveItem(root.text, root.itemIndex)
         }
     }
 

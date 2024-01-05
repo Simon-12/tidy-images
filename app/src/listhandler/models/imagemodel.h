@@ -1,24 +1,21 @@
 #ifndef IMAGEMODEL_H
 #define IMAGEMODEL_H
 
-#include <QObject>
-#include <QDebug>
 #include <QAbstractListModel>
+#include <QDebug>
+#include <QObject>
 
-#include "../basefile/imagefile.h"
-#include "support.h"
+#include "../basefile/basefile.h"
 
 /*!
  * \brief The ImageModel class:
  * Image model, contains the image path.
  */
-class ImageModel : public QAbstractListModel
-{
+class ImageModel : public QAbstractListModel {
     Q_OBJECT
 
 public:
-
-    explicit ImageModel(FileList* list, QObject *parent = nullptr);
+    explicit ImageModel(FileList *list, QObject *parent = nullptr);
 
     void insert(const int index);
     void remove(const int index);
@@ -35,10 +32,8 @@ public slots:
     int size();
 
 protected:
-
-    FileList* m_fileList;
+    FileList *m_fileList;
     QStringList m_model;
-
 };
 
-#endif // IMAGEMODEL_H
+#endif  // IMAGEMODEL_H

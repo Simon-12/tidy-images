@@ -1,5 +1,9 @@
-
 *.dll
 *.user
 build*
 docs/html/
+.vscode/
+.cache/
+CMakePresets.json
+CMakeUserPresets.json
+compile_commands.json

@@ -1,9 +1,9 @@
 #ifndef HEADERMODEL_H
 #define HEADERMODEL_H
 
-#include <QObject>
-#include <QDebug>
 #include <QAbstractListModel>
+#include <QDebug>
+#include <QObject>
 
 #include "headeritem.h"
 
@@ -11,24 +11,16 @@
  * \brief The HeaderModel class:
  * Header model for the database, shows the column name with filter and direction.
  */
-class HeaderModel : public QAbstractListModel
-{
-    Q_OBJECT    
+class HeaderModel : public QAbstractListModel {
+    Q_OBJECT
 
 public:
+    explicit HeaderModel(QList<QString> &header, QObject *parent = nullptr);
 
-    explicit HeaderModel(QVector<QString> &header, QObject *parent = nullptr);
-
-    enum HeaderRoles
-    {
-        NameRole = Qt::UserRole + 1,
-        FilterRole,
-        DirectionRole
-    };
+    enum HeaderRoles { NameRole = Qt::UserRole + 1, FilterRole, DirectionRole };
 
     // QAbstractItemModel interface
 public:
-
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
     QHash<int, QByteArray> roleNames() const;
@@ -36,10 +28,9 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role);
 
 private:
-
     int size() const;
     void setFilter();
-    QVector<HeaderItem> m_items;
+    QList<HeaderItem> m_items;
 
 signals:
 
@@ -51,4 +42,4 @@ public slots:
     void resetFiler();
 };
 
-#endif // HEADERMODEL_H
+#endif  // HEADERMODEL_H

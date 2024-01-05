@@ -1,9 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 import "../components"
-
 
 // Compare main item
 Item {
@@ -14,10 +13,10 @@ Item {
     property var table
     property int progress
     property int bufferSize
-    signal imageLoaded(var image)
-    signal startCompare(var index)
-    signal stopCompare()
-    signal btnDelete(var index)
+    signal imageLoaded(int image)
+    signal startCompare(int index)
+    signal stopCompare
+    signal btnDelete(int index)
 
     ButtonDefault {
         width: 200
@@ -39,10 +38,12 @@ Item {
         threshold: root.table !== null ? root.table.threshold : 0
 
         onStopCompare: root.stopCompare()
-        onStartCompare: {
+        onStartCompare: function (image, threshold) {
             var val = 0
-            if(image === true) val = left.index
-            else val = right.index
+            if (image === true)
+                val = left.index
+            else
+                val = right.index
             root.table.threshold = threshold
             root.startCompare(val)
         }
@@ -58,7 +59,8 @@ Item {
             Layout.alignment: Qt.AlignHCenter
 
             function setFile() {
-                if(root.table === null) return
+                if (root.table === null)
+                    return
                 root.table.setFile(left.index, right.index)
             }
         }
@@ -76,7 +78,7 @@ Item {
                 model: root.images
                 bufferSize: root.bufferSize
                 onIndexChanged: table.setFile()
-                onImageLoaded: root.imageLoaded(image)
+                onImageLoaded: image => root.imageLoaded(image)
                 onBtnDelete: root.btnDelete(index)
             }
 
@@ -87,7 +89,7 @@ Item {
                 model: root.images
                 bufferSize: root.bufferSize
                 onIndexChanged: table.setFile()
-                onImageLoaded: root.imageLoaded(image)
+                onImageLoaded: image => root.imageLoaded(image)
                 onBtnDelete: root.btnDelete(index)
             }
         }

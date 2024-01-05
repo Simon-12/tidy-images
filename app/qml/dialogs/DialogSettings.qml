@@ -1,25 +1,25 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls.Material 2.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
-import qml.options 1.0
+import qml.components
+import "."  // For debug project (needs to be in this line)
 import "../components"
 
-
 // Popup with application settings
-PopupDefault
-{
+PopupDefault {
     id: root
     property string path
     property string folders
     property string database
     property string favorites
     property string trash
-    property bool isDatabase
-    signal changePath(var path, var option)
-    signal addDatabase()
-    signal removeDatabase()
+    property bool databaseActive
+    signal changePath(string path, var option)
+    signal changeDatabase(bool option)
+    signal addDatabase
+    signal removeDatabase
 
     Column {
         // Main layout
@@ -78,12 +78,26 @@ PopupDefault
             Column {
                 spacing: 12
 
-                Label {
-                    text: "Database"
+                RowLayout {
                     width: parent.width
-                    font.bold: true
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
+
+                    Label {
+                        text: "Database"
+                        Layout.fillWidth: true
+                        font.bold: true
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    Label {
+                        text: "Enabled"
+                        font.pointSize: 12
+                    }
+                    CheckBox {
+                        checked: root.databaseActive
+                        padding: 0
+                        verticalPadding: 0
+                        onClicked: root.changeDatabase(checked)
+                    }
                 }
 
                 RowLayout {
@@ -93,7 +107,7 @@ PopupDefault
                     Label {
                         text: "Current Path:"
                         bottomPadding: 10
-                        font.pointSize: 11
+                        font.pointSize: 12
                         font.bold: true
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
@@ -103,7 +117,7 @@ PopupDefault
                         topPadding: 0
                         bottomPadding: 10
                         text: root.path
-                        font.pointSize: 9
+                        font.pointSize: 10
                         selectByMouse: true
                     }
                 }
@@ -117,7 +131,7 @@ PopupDefault
                         iconSize: 20
                         icon.source: "qrc:/icons/flaticon/database_add.png"
                         onClicked: root.addDatabase()
-                        enabled: root.isDatabase
+                        enabled: root.databaseActive
                     }
                     ButtonDefault {
                         implicitWidth: 220
@@ -125,7 +139,7 @@ PopupDefault
                         iconSize: 20
                         icon.source: "qrc:/icons/flaticon/database_remove.png"
                         onClicked: root.removeDatabase()
-                        enabled: root.isDatabase
+                        enabled: root.databaseActive
                     }
                 }
             }

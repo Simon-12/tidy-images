@@ -1,18 +1,18 @@
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls 2.15
-import QtQuick.Controls.Styles 1.4
-import QtQml.Models 2.15 // DelegateModel
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+import QtQml.Models
 
 import "../components"
-
 
 // ListView with dragable buttons
 Item {
 
     id: root
     property var model
-    signal click(var path)
+    property int sizeModel: model !== null ? model.size : 0
+    signal click(string path)
+    signal addFolder
 
     GroupBoxDefault {
 
@@ -20,11 +20,19 @@ Item {
         anchors.fill: parent
         title: "Folders"
 
+        ButtonDefault {
+            anchors.fill: parent
+            icon.source: "qrc:/icons/flaticon/add.png"
+            onClicked: root.addFolder()
+            visible: sizeModel == 0
+        }
+
         ListView {
 
             id: view
             anchors.fill: parent
             spacing: 5
+            visible: sizeModel > 0
 
             model: DelegateModel {
                 id: visualModel
@@ -36,9 +44,11 @@ Item {
                     height: 30
                     property int itemIndex: DelegateModel.itemsIndex // index from model
 
-                    onEntered: {
+                    onEntered: function (drag) {
                         // Start move animation
-                        visualModel.items.move((drag.source as ButtonDraggable).itemIndex, btn.itemIndex)
+                        visualModel.items.move(
+                                    (drag.source as ButtonDraggable).itemIndex,
+                                    btn.itemIndex)
                     }
 
                     ButtonDraggable {
@@ -50,7 +60,8 @@ Item {
                         itemIndex: delegateRoot.itemIndex
                         text: model.name
                         onClick: root.click(model.path)
-                        onMoveItem: root.model.move(key, target)
+                        onMoveItem: (key, target) => root.model.move(key,
+                                                                     target)
                     }
                 }
             }
