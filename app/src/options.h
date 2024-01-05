@@ -2,23 +2,24 @@
 #define OPTIONCLASS_H
 
 #include <QObject>
+#include <QQmlEngine>
 
 /*!
  * \brief The Options class:
  * Options for the application, gets registerter to qml
  */
-class Options
-{
-    Q_GADGET
+class Options : public QObject {
+    Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("Not creatable as it is an enum type")
 
 public:
-
     enum AppMode { Gallery, Image, Video, Compare, Database, Empty };
-    enum Menu { Path, Favorites, Trash, File};
+    enum Menu { Path, Favorites, Trash, File };
     enum PathOptions { CurrentPath, FolderFile, DatabaseFile, FavoritesFolder, TrashFolder };
     enum Order { Name, Type, Recorded, Created, Modified };
     enum Direction { Up, Down };
-    enum HeaderDirection{ Disabled, Low, High };
+    enum HeaderDirection { Disabled, Low, High };
 
     Q_ENUM(AppMode)
     Q_ENUM(Menu)
@@ -28,13 +29,7 @@ public:
     Q_ENUM(HeaderDirection)
 
 private:
-
-    explicit Options()
-    {
-    }
-
-signals:
-
+    explicit Options() {}
 };
 
 typedef Options::AppMode AppMode;
@@ -44,10 +39,9 @@ typedef Options::Order Order;
 typedef Options::Direction Direction;
 typedef Options::HeaderDirection HeaderDirection;
 
-// Declare for QML
 Q_DECLARE_METATYPE(AppMode)
 Q_DECLARE_METATYPE(Menu)
 Q_DECLARE_METATYPE(PathOptions)
 Q_DECLARE_METATYPE(HeaderDirection)
 
-#endif // OPTIONCLASS_H
+#endif  // OPTIONCLASS_H

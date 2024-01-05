@@ -1,6 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
+import QtQuick
+import QtQuick.Controls
 
 // Database table
 Item {
@@ -9,7 +8,7 @@ Item {
     property var model
     property var widthArray
     property int index: 0
-    signal clicked(var row)
+    signal clicked(int row)
 
     TableView {
 
@@ -34,7 +33,7 @@ Item {
 
             // Background border
             Rectangle {
-                z : -1
+                z: -1
                 color: "black"
                 anchors.fill: parent
                 anchors.topMargin: -1
@@ -57,9 +56,11 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 onClicked: root.clicked(row)
-                onWheel: {
-                    if(wheel.angleDelta.y > 0) scrollbar.decrease()
-                    if(wheel.angleDelta.y < 0) scrollbar.increase()
+                onWheel: function (wheel) {
+                    if (wheel.angleDelta.y > 0)
+                        scrollbar.decrease()
+                    if (wheel.angleDelta.y < 0)
+                        scrollbar.increase()
                 }
             }
         }

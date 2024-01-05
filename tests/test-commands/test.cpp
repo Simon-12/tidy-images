@@ -1,8 +1,6 @@
-#include "testapp.h"
+#include "test.h"
 
-
-TestApp::TestApp()
-{
+TestCommands::TestCommands() {
     m_listType.append("Camera");
     m_listType.append("Mobile");
     m_listType.append("Message");
@@ -23,30 +21,28 @@ TestApp::TestApp()
     m_listType.append("Other");
     m_listType.append("Other");
 
-    m_listDate.append("Do Apr 15 14:26:38 2021");
-    m_listDate.append("Fr Apr 16 16:38:54 2021");
-    m_listDate.append("Fr Apr 16 16:40:04 2021");
-    m_listDate.append("Fr Apr 16 16:41:06 2021");
-    m_listDate.append("Fr Apr 16 16:42:27 2021");
-    m_listDate.append("Fr Apr 16 16:44:49 2021");
-    m_listDate.append("Fr Apr 16 16:46:14 2021");
-    m_listDate.append("Fr Apr 16 16:48:26 2021");
-    m_listDate.append("Fr Apr 16 16:49:23 2021");
-    m_listDate.append("Sa Apr 17 09:37:21 2021");
-    m_listDate.append("Do Apr 29 12:14:02 2021");
-    m_listDate.append("Do Apr 29 12:14:04 2021");
-    m_listDate.append("Do Apr 29 12:14:04 2021");
-    m_listDate.append("Do Apr 29 12:14:04 2021");
-    m_listDate.append("Do Apr 29 12:14:04 2021");
-    m_listDate.append("Do Apr 29 12:14:04 2021");
-    m_listDate.append("Do Apr 29 12:14:04 2021");
-    m_listDate.append("Do Apr 29 12:14:04 2021");
-    m_listDate.append("Fr Apr 30 11:01:25 2021");
+    m_listDate.append("Thu Apr 29 12:14:02 2021");
+    m_listDate.append("Thu Apr 29 12:14:04 2021");
+    m_listDate.append("Thu Apr 29 12:14:04 2021");
+    m_listDate.append("Thu Apr 29 12:14:04 2021");
+    m_listDate.append("Thu Apr 29 12:14:04 2021");
+    m_listDate.append("Thu Apr 29 12:14:04 2021");
+    m_listDate.append("Thu Apr 29 12:14:04 2021");
+    m_listDate.append("Thu Apr 29 12:14:04 2021");
+    m_listDate.append("Sun Dec 19 13:16:19 2021");
+    m_listDate.append("Sun Dec 19 13:16:19 2021");
+    m_listDate.append("Sun Dec 19 13:16:19 2021");
+    m_listDate.append("Sun Dec 19 13:16:19 2021");
+    m_listDate.append("Sun Dec 19 13:16:19 2021");
+    m_listDate.append("Sun Dec 19 13:16:19 2021");
+    m_listDate.append("Sun Dec 19 13:16:20 2021");
+    m_listDate.append("Sun Dec 19 13:16:20 2021");
+    m_listDate.append("Sun Dec 19 13:16:20 2021");
+    m_listDate.append("Sun Dec 19 13:16:20 2021");
+    m_listDate.append("Sun Dec 19 13:16:20 2021");
 }
 
-
-void TestApp::initTestCase()
-{
+void TestCommands::initTestCase() {
     // Called before the first test
     qInfo() << "Init test cases";
     QScopedPointer<ConfigHandler> config(new ConfigHandler("config_test.ini"));
@@ -55,19 +51,16 @@ void TestApp::initTestCase()
     folder->initTest();
 
     m_controller = QSharedPointer<QmlController>(new QmlController("config_test.ini"));
-    QThread::sleep(5); // Wait some time for thread finished
+    m_controller->startLoadFiles(true);
+    m_controller->waitFilesLoaded();
 }
 
-
-void TestApp::cleanupTestCase()
-{
+void TestCommands::cleanupTestCase() {
     // Called after the last test
     qInfo() << "Close test cases";
 }
 
-
-void TestApp::test_commands()
-{
+void TestCommands::test_commands() {
     // Move command
     m_controller->setIndex(0);
     QString path = QDir::currentPath() + "/Test";
@@ -78,24 +71,20 @@ void TestApp::test_commands()
     QVERIFY(!QFile::exists(target));
 }
 
-
-void TestApp::test_sort()
-{
+void TestCommands::test_sort() {
     // Sort type
     m_controller->changeOrder(1);
-    QThread::sleep(5); // Wait some time for thread finished
+    m_controller->waitFilesLoaded();
     FileList* list = m_controller->fileList();
-    for(int i = 0; i < list->size(); i++)
-    {
+    for (int i = 0; i < list->size(); i++) {
         FilePtr file = list->at(i);
         QCOMPARE(file->formatStr(), m_listType[i]);
     }
 
     // Sort modified
     m_controller->changeOrder(4);
-    QThread::sleep(5); // Wait some time for thread finished
-    for(int i = 0; i < list->size(); i++)
-    {
+    m_controller->waitFilesLoaded();
+    for (int i = 0; i < list->size(); i++) {
         FilePtr file = list->at(i);
         QCOMPARE(file->modified()->toString(), m_listDate[i]);
     }
@@ -103,14 +92,12 @@ void TestApp::test_sort()
     // Change direction
     m_controller->changeDirection(1);
     std::reverse(m_listDate.begin(), m_listDate.end());
-    QThread::sleep(5); // Wait some time for thread finished
-    for(int i = 0; i < list->size(); i++)
-    {
+    m_controller->waitFilesLoaded();
+    for (int i = 0; i < list->size(); i++) {
         FilePtr file = list->at(i);
         QCOMPARE(file->modified()->toString(), m_listDate[i]);
     }
 }
 
-
 // Generate main()
-QTEST_MAIN(TestApp)
+QTEST_MAIN(TestCommands)

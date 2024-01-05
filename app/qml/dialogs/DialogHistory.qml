@@ -1,14 +1,12 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls.Material 2.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
 import "../components"
 
-
 // Popup for history
-PopupDefault
-{
+PopupDefault {
     id: root
     width: 670
     height: 600
@@ -43,11 +41,12 @@ PopupDefault
             model: root.model
             delegate: HistoryBox {
                 width: view.width
-                height: 28 + (17 * model.number)
+                height: model.number > 2 ? (28 + (17 * 3)) : (28 + (17 * model.number))
                 name: model.name
                 folder: model.folder
-                source: !model.target ? "" :  // undefined
-                                 root.index >= index ? model.target : model.source
+                source: !model.target ? "" : // undefined
+                                        root.index >= index ? model.target : model.source
+                number: model.number
                 empty: index === 0
                 selected: root.index === index
                 onClicked: root.model.clicked(index)

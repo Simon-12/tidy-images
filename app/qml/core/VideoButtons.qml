@@ -1,10 +1,9 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtMultimedia 5.15 // Video
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtMultimedia
 
 import "../components"
-
 
 // Video buttons on bottom position
 ColumnLayout {
@@ -15,13 +14,13 @@ ColumnLayout {
     property alias volume: volumeSld.value
     property alias label: label.text
     property alias play: playBtn.state
-    signal seekUp()
-    signal seekDown()
-    signal undock()
+    signal seekUp
+    signal seekDown
+    signal undock
 
     // Icon propertys
     property string iconPlay: isUndock ? "qrc:/icons/material/play_white.png" : "qrc:/icons/material/play.png"
-    property string iconPause: isUndock ? "qrc:/icons/material/pause_white.png" : "qrc:/icons/material/pause.png"
+    property string iconPause: isUndock ? "qrc:/icons/material/pause_white.png" : "qrc:/icons/material/pause.svg"
     property string iconUp: isUndock ? "qrc:/icons/material/forward_white.png" : "qrc:/icons/material/forward.png"
     property string iconDown: isUndock ? "qrc:/icons/material/rewind_white.png" : "qrc:/icons/material/rewind.png"
     property string iconVolume: isUndock ? "qrc:/icons/material/volume_white.png" : "qrc:/icons/material/volume.png"
@@ -96,7 +95,7 @@ ColumnLayout {
             backgroundState: root.isUndock
             icon.source: state ? root.iconVolume : root.iconMute
             onClicked: {
-                if(state)
+                if (state)
                     volumeSld.value = 0
                 else
                     volumeSld.value = 0.5
@@ -107,8 +106,8 @@ ColumnLayout {
             from: 0
             to: 1
             value: 0.8
-            onValueChanged: {
-                if(value == 0)
+            onValueChanged: function (value) {
+                if (value === 0)
                     volumeBtn.state = false
                 else
                     volumeBtn.state = true

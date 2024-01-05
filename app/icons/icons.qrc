@@ -59,5 +59,7 @@
         <file>flaticon/bitcoin.png</file>
         <file>flaticon/paypal.png</file>
         <file>flaticon/website.png</file>
+        <file>material/square.svg</file>
+        <file>material/pause.svg</file>
     </qresource>
 </RCC>

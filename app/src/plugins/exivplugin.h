@@ -11,11 +11,8 @@
  * \brief The ExivPlugin class:
  * Abstract exiv plugin for image metadata.
  */
-class ExivPlugin : public BasePlugin
-{
-
+class ExivPlugin : public BasePlugin {
 public:
-
     explicit ExivPlugin();
 
     virtual void exifInfo();
@@ -30,4 +27,4 @@ public:
 // Declare interface
 Q_DECLARE_INTERFACE(ExivPlugin, "plugin.exiv")
 
-#endif // EXIVPLUGIN_H
+#endif  // EXIVPLUGIN_H

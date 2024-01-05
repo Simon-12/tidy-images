@@ -1,6 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
+import QtQuick
+import QtQuick.Controls
 
 // SwipeView with images
 Item {
@@ -10,10 +9,10 @@ Item {
     property var model
     property int index
     property int bufferSize
-    signal newIndex(var index)
-    signal indexUp()
-    signal indexDown()
-    signal imageLoaded(var image)
+    signal newIndex(int index)
+    signal indexUp
+    signal indexDown
+    signal imageLoaded(int image)
 
     // Avoid binding loop
     Component.onCompleted: swipeView.setCurrentIndex(0)
@@ -37,7 +36,9 @@ Item {
 
             delegate: Loader {
 
-                active: Math.abs(swipeView.currentIndex - index) < root.bufferSize && model.name !== undefined
+                active: Math.abs(
+                            swipeView.currentIndex - index) < root.bufferSize
+                        && model.name !== undefined
                 sourceComponent: ImageItem {
                     source: model.name
                     onClicked: root.model.browse(index)
@@ -54,5 +55,3 @@ Item {
         container.itemAt(swipeView.currentIndex).item.setRotation(direction)
     }
 }
-
-

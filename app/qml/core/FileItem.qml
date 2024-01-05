@@ -1,6 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
+import QtQuick
+import QtQuick.Controls
 
 // File item with image or video
 Item {
@@ -12,40 +11,59 @@ Item {
     property string frame
     property bool isActive
     property size sourceSize
-    signal indexUp()
-    signal indexDown()
-    signal imageLoaded()
-    signal browse()
+    signal indexUp
+    signal indexDown
+    signal imageLoaded
+    signal browse
 
     function seekUp() {
-        if(state === "Video")
+        if (type === "Video")
             video.item.seekUp()
     }
 
     function seekDown() {
-        if(state === "Video")
+        if (type === "Video")
             video.item.seekDown()
     }
 
     function pause() {
-        if(state === "Video")
+        if (type === "Video")
             video.item.pause()
     }
 
+    function close() {
+        if (type === "Video")
+            video.item.close()
+    }
+
     function rotateImage(direction) {
-        if(state === "Image")
+        if (type === "Image")
             image.item.setRotation(direction)
     }
 
     state: root.type
     states: [
-        State { name: "Image"
-            PropertyChanges { target: image; active: true }
-            PropertyChanges { target: video; active: false }
+        State {
+            name: "Image"
+            PropertyChanges {
+                target: image
+                active: true
+            }
+            PropertyChanges {
+                target: video
+                active: false
+            }
         },
-        State { name: "Video"
-            PropertyChanges { target: image; active: false }
-            PropertyChanges { target: video; active: true }
+        State {
+            name: "Video"
+            PropertyChanges {
+                target: image
+                active: false
+            }
+            PropertyChanges {
+                target: video
+                active: true
+            }
         }
     ]
 

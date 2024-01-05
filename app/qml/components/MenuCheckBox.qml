@@ -1,15 +1,12 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
-import qml.options 1.0
-
+import QtQuick
+import QtQuick.Controls
 
 // Menu item with checkbox
 MenuDefault {
 
     id: root
     property bool mode
-    signal clicked()
+    signal clicked
 
     onTriggered: root.clicked()
 
@@ -26,4 +23,3 @@ MenuDefault {
         anchors.horizontalCenterOffset: -width
     }
 }
-

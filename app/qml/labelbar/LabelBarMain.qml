@@ -1,10 +1,9 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls.Material 2.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
-import qml.options 1.0
-
+import qml.components
 
 // Label bar on top side
 Item {
@@ -13,10 +12,10 @@ Item {
     property var mode
     property var model
     property bool isFullscreen
-    signal addLabel(var string)
-    signal removeLabel(var num)
+    signal addLabel(string name)
+    signal removeLabel(int num)
 
-    height: 30
+    height: 35
     visible: mode === Options.Image || mode === Options.Video || isFullscreen
     onVisibleChanged: state = visible ? "true" : "false"
 
@@ -42,7 +41,7 @@ Item {
                 LabelEditField {
                     Layout.preferredHeight: parent.height - 10
                     Layout.rightMargin: 30
-                    onAddItem: root.addLabel(string)
+                    onAddItem: name => root.addLabel(name)
                 }
 
                 ListView {
@@ -68,19 +67,34 @@ Item {
     states: [
         State {
             name: "true"
-            PropertyChanges { target: root; height: 30; opacity: 1 }
+            PropertyChanges {
+                target: root
+                height: 35
+                opacity: 1
+            }
         },
         State {
             name: "false"
-            PropertyChanges { target: root; height: 0; opacity: 0 }
+            PropertyChanges {
+                target: root
+                height: 0
+                opacity: 0
+            }
         }
     ]
     transitions: [
         Transition {
-            from: "false"; to: "true"
-            NumberAnimation { target: root; properties: "height"; duration: 500 }
-            OpacityAnimator { target: root; duration: 500 }
+            from: "false"
+            to: "true"
+            NumberAnimation {
+                target: root
+                properties: "height"
+                duration: 500
+            }
+            OpacityAnimator {
+                target: root
+                duration: 500
+            }
         }
     ]
 }
-

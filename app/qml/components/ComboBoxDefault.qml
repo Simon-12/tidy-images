@@ -1,6 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
+import QtQuick
+import QtQuick.Controls
 
 // Default ComboBox
 ComboBox {
@@ -12,5 +11,5 @@ ComboBox {
     bottomInset: 0
 
     hoverEnabled: true
-    background: BackgroundDefault { }
+    background: BackgroundDefault {}
 }

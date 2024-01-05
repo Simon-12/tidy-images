@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 // Focus handler
 Item {
@@ -8,14 +8,18 @@ Item {
     focus: true
     property bool state: false
 
-    function checkFocus(activeItem)
-    {
-        if(activeItem === null) return
+    function checkFocus(activeItem) {
+        if (activeItem === null)
+            return
         var name = activeItem.objectName
         // console.log(name) // debug
-        if(name === "item unlock") root.state = true
-        if(name === "item lock") root.state = false
-        if(root.state) return
-        else root.forceActiveFocus() // hold focus here
+        if (name === "item unlock")
+            root.state = true
+        if (name === "item lock")
+            root.state = false
+        if (root.state)
+            return
+        else
+            root.forceActiveFocus() // hold focus here
     }
 }

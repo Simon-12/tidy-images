@@ -1,30 +1,19 @@
 #include "folderhandler.h"
 
+#include "support.h"
 
-FolderHandler::FolderHandler(Settings set, QObject *parent) :
-    BaseHandler(set.json, parent)
-{    
+FolderHandler::FolderHandler(Settings set, QObject *parent) : BaseHandler(set.json, parent) {}
 
-}
-
-
-void FolderHandler::initTest()
-{
+void FolderHandler::initTest() {
     initModel();
     QString path = QDir::currentPath() + "/Test";
     addFolder(path);
     QDir().mkdir(path);
 }
 
+void FolderHandler::updateFile() { write(); }
 
-void FolderHandler::updateFile()
-{
-    write();
-}
-
-
-void FolderHandler::initModel()
-{
+void FolderHandler::initModel() {
     m_model = new FolderModel(this);
     connect(m_model, &FolderModel::modelChanged, this, &FolderHandler::updateFile);
 
@@ -33,14 +22,11 @@ void FolderHandler::initModel()
     connect(m_filter, &FolderFilterModel::move, m_model, &FolderModel::moveKey);
 }
 
-
-bool FolderHandler::addFolder(QString path)
-{
+bool FolderHandler::addFolder(QString path) {
     int idx = path.lastIndexOf("/") + 1;
     QString folder = path.mid(idx);
 
-    if(m_model->contains(folder))
-    {
+    if (m_model->contains(folder)) {
         MessageBox("Folder already exist!");
         return false;
     }
@@ -52,9 +38,7 @@ bool FolderHandler::addFolder(QString path)
     return true;
 }
 
-
-void FolderHandler::read()
-{
+void FolderHandler::read() {
     initModel();
 
     // Read file
@@ -65,40 +49,44 @@ void FolderHandler::read()
     QJsonObject obj;
     obj = document["Folders"].toObject();
 
+    // Count selected items
+    int size = 0;
+
     // Sort keys with position and add to model
     QStringList folders = obj.keys();
-    for(int i = 0; i < folders.size(); i++)
-    {
-        foreach(QString item, folders)
-        {
+    for (int i = 0; i < folders.size(); i++) {
+        foreach (QString item, folders) {
             QJsonValue value = obj[item];
-            if(i == value["Position"].toInt())
-            {
-                m_model->append(FolderItem(item,
-                                           value["Path"].toString(),
-                                value["Selected"].toBool()
-                        )
-                        );
-                break; // Stop foreach loop
+            if (i == value["Position"].toInt()) {
+                bool selected = value["Selected"].toBool();
+                if (selected) size++;
+                m_model->append(FolderItem(item, value["Path"].toString(), selected));
+                break;  // Stop foreach loop
             }
         }
     }
+
+    // Set size for model
+    m_filter->setSize(size);
+
     qInfo() << "Read Json file";
 }
 
-
-void FolderHandler::write()
-{
+void FolderHandler::write() {
     // Create json objects
     QJsonObject obj_all;
 
+    // Count selected items
+    int size = 0;
+
     // Read Model Data
-    for(int i = 0; i < m_model->size(); i++)
-    {
+    for (int i = 0; i < m_model->size(); i++) {
         FolderItem item = m_model->getItem(i);
         QJsonObject obj;
+        bool selected = item.selected();
+        if (selected) size++;
         obj["Position"] = i;
-        obj["Selected"] = item.selected();
+        obj["Selected"] = selected;
         obj["Path"] = item.path();
         obj_all[item.name()] = obj;
     }
@@ -108,13 +96,12 @@ void FolderHandler::write()
     json_root["Folders"] = obj_all;
     QJsonDocument document(json_root);
 
+    // Set size for model
+    m_filter->setSize(size);
+
     // Save
     writeFile(document.toJson());
     qInfo() << "Write Json file";
 }
 
-
-void FolderHandler::defaultFile()
-{
-    initModel();
-}
+void FolderHandler::defaultFile() { initModel(); }

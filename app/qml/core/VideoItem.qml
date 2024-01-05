@@ -1,12 +1,11 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Window 2.15
-import QtQuick.Layouts 1.15
-import QtMultimedia 5.15 // Video
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Window
+import QtQuick.Layouts
+import QtMultimedia
 
 import "SupportFunctions.js" as SF
 import "../components"
-
 
 // Video item with undock option
 Item {
@@ -15,7 +14,7 @@ Item {
     anchors.fill: parent
     property string source
     property bool showClose: false
-    signal closeVideo()
+    signal closeVideo
 
     function seekUp() {
         video.seek(video.position + 15000)
@@ -40,7 +39,6 @@ Item {
         ColumnLayout {
             anchors.fill: parent
 
-
             ButtonClose {
                 id: btnClose
                 Layout.alignment: Qt.AlignRight
@@ -55,27 +53,38 @@ Item {
                 source: root.source
                 volume: btnsVideo.volume
                 fillMode: VideoOutput.PreserveAspectFit // Fit without cropping
-                flushMode: VideoOutput.EmptyFrame // When playback is finished or stopped
 
                 // Useful properties:
                 // position - current video position (ms)
                 // duration - video duration (ms)
                 // bufferProgress - 0.0 (empty) to 1.0 (full)
                 // notifyInterval: 100 // interval at which notifiable position will update.
-
-                onPositionChanged: btnsVideo.label = SF.msToString(position) + " | " + SF.msToString(duration)
+                // Missing in Qt6
+                // flushMode: VideoOutput.EmptyFrame // When playback is finished or stopped
+                onPositionChanged: btnsVideo.label = SF.msToString(
+                                       position) + " | " + SF.msToString(
+                                       duration)
                 onPlaybackStateChanged: {
-                    switch (playbackState)
-                    {
-                    case MediaPlayer.PlayingState: console.log("Video playback state:", "playing"); break
-                    case MediaPlayer.PausedState:  console.log("Video playback state:", "paused"); break
-                    case MediaPlayer.StoppedState: console.log("Video playback state:", "stopped"); break
+                    switch (playbackState) {
+                    case MediaPlayer.PlayingState:
+                        console.log("Video playback state:", "playing")
+                        break
+                    case MediaPlayer.PausedState:
+                        console.log("Video playback state:", "paused")
+                        break
+                    case MediaPlayer.StoppedState:
+                        console.log("Video playback state:", "stopped")
+                        break
                     }
-                    if(playbackState == MediaPlayer.PausedState)
-                        btnsVideo.play = true
-                    else
+                    if (playbackState == MediaPlayer.PlayingState)
                         btnsVideo.play = false
+                    else
+                        btnsVideo.play = true
                 }
+
+                // Missing in Qt6
+
+                /*
                 onStatusChanged: {
                     switch (status)
                     {
@@ -92,12 +101,12 @@ Item {
                     case MediaPlayer.InvalidMedia:  console.log("Video status:", "InvalidMedia"); break
                     case MediaPlayer.UnknownStatus: console.log("Video status:", "UnknownStatus"); break
                     }
-                }
-
-                function playback()
-                {
-                    if(playbackState == MediaPlayer.PlayingState) pause()
-                    else play()
+                }*/
+                function playback() {
+                    if (playbackState == MediaPlayer.PlayingState)
+                        pause()
+                    else
+                        play()
                 }
 
                 MouseArea {
@@ -120,18 +129,45 @@ Item {
     states: [
         State {
             name: "dock"
-            PropertyChanges { target: window; visible: false }
-            PropertyChanges { target: btnsVideo; isUndock: false }
-            PropertyChanges { target: btnClose; visible: root.showClose}
-            ParentChange { target: container; parent: root }
+            PropertyChanges {
+                target: window
+                visible: false
+            }
+            PropertyChanges {
+                target: btnsVideo
+                isUndock: false
+            }
+            PropertyChanges {
+                target: btnClose
+                visible: root.showClose
+            }
+            ParentChange {
+                target: container
+                parent: root
+            }
         },
         State {
             name: "undock"
-            PropertyChanges { target: window; visible: true }
-            PropertyChanges { target: undockContainer; focus: true }
-            PropertyChanges { target: btnsVideo; isUndock: true }
-            PropertyChanges { target: btnClose; visible: false }
-            ParentChange { target: container; parent: undockContainer }
+            PropertyChanges {
+                target: window
+                visible: true
+            }
+            PropertyChanges {
+                target: undockContainer
+                focus: true
+            }
+            PropertyChanges {
+                target: btnsVideo
+                isUndock: true
+            }
+            PropertyChanges {
+                target: btnClose
+                visible: false
+            }
+            ParentChange {
+                target: container
+                parent: undockContainer
+            }
         }
     ]
 

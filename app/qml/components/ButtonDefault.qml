@@ -1,6 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
+import QtQuick
+import QtQuick.Controls
 
 // Default button for the application
 Button {
@@ -19,11 +18,8 @@ Button {
     icon.height: iconSize
     icon.width: iconSize
     icon.color: "transparent"
-    antialiasing: true
-    smooth: true
-    layer.mipmap: true
 
     font.capitalization: Font.MixedCase
     hoverEnabled: true
-    background: BackgroundDefault { }
+    background: BackgroundDefault {}
 }

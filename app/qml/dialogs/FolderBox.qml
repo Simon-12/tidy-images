@@ -1,10 +1,9 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls.Material 2.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
 import "../components"
-
 
 // Delegate for folder dialog
 Item {
@@ -14,13 +13,13 @@ Item {
     property string name
     property string path
     property bool checked
-    signal clicked()
-    signal browse()
-    signal remove()
+    signal clicked
+    signal browse
+    signal remove
 
     Pane {
         anchors.fill: parent
-        Material.elevation: 5        
+        Material.elevation: 5
         leftPadding: 10
         rightPadding: 10
         padding: 0
@@ -38,7 +37,7 @@ Item {
 
             Label {
                 text: root.name
-                font.pointSize: 11
+                font.pointSize: 12
                 font.bold: true
                 Layout.preferredWidth: 140
             }
@@ -48,7 +47,7 @@ Item {
                 topPadding: 0
                 bottomPadding: 0
                 text: root.path
-                font.pointSize: 9
+                font.pointSize: 10
                 onAccepted: root.browse()
                 onEditingFinished: text = root.path
                 selectByMouse: true

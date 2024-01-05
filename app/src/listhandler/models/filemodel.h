@@ -1,14 +1,12 @@
 #ifndef FILEMODEL_H
 #define FILEMODEL_H
 
-#include <QObject>
-#include <QDebug>
-#include <QVector>
 #include <QAbstractListModel>
+#include <QDebug>
+#include <QObject>
+#include <QSet>
 
-#include "../basefile/imagefile.h"
-#include "../basefile/videofile.h"
-#include "support.h"
+#include "../basefile/basefile.h"
 #include "fileitem.h"
 
 /*!
@@ -16,17 +14,15 @@
  * File model for image and video files.
  * Contains the file type and path to the file.
  */
-class FileModel : public QAbstractListModel
-{
+class FileModel : public QAbstractListModel {
     Q_OBJECT
 
 public:
+    explicit FileModel(FileList *list, QObject *parent = nullptr);
 
-    explicit FileModel(FileList* list, QObject *parent = nullptr);
-
-    QVector<int> selected(){ return m_selected; }
+    QList<int> selected();
     void append(const FileItem &item);
-    void insert(const int index);
+    void insertFiles(const QList<int> &list);
     void remove(const int index);
     void setFavorite(const int index, bool state);
     void clear();
@@ -39,15 +35,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role);
 
-    enum FileRoles
-    {
-        PathRole = Qt::UserRole + 1,
-        TypeRole,
-        DurationRole,
-        FrameRole,
-        SelectedRole,
-        FavoriteRole
-    };
+    enum FileRoles { PathRole = Qt::UserRole + 1, TypeRole, DurationRole, FrameRole, SelectedRole, FavoriteRole };
 
 signals:
 
@@ -58,13 +46,15 @@ public slots:
     void refreshModel();
     void clearSelected();
     void browse(const int index);
+    void setMultiple(bool state);
 
 private:
+    void selectMultiple();
 
-    FileList* m_fileList;
-    QVector<FileItem> m_items;
-    QVector<int> m_selected;
-
+    FileList *m_fileList;
+    QList<FileItem> m_items;
+    QSet<int> m_range;
+    bool m_isMultiple;
 };
 
-#endif // FILEMODEL_H
+#endif  // FILEMODEL_H

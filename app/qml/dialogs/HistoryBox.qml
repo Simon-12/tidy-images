@@ -1,10 +1,9 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls.Material 2.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
 import "../components"
-
 
 // Delegate for history dialog
 Item {
@@ -13,13 +12,15 @@ Item {
     property string name
     property string folder
     property string source
+    property int number
     property bool empty
     property bool selected
-    signal clicked()
+    signal clicked
 
     Pane {
         anchors.fill: parent
         padding: 0
+        bottomPadding: -1
         Material.elevation: 5
 
         // Item background
@@ -29,9 +30,7 @@ Item {
             property color cHovered: "#e0e0e0" // light gray
             property color cpressed: "gray"
             property color cSelected: "#9FA8DA" // indigo (shade)
-            color: area.pressed ? cpressed :
-                                  area.hovered ? cHovered :
-                                                 root.selected ? cSelected : cDefault
+            color: area.pressed ? cpressed : area.hovered ? cHovered : root.selected ? cSelected : cDefault
         }
 
         RowLayout {
@@ -58,9 +57,10 @@ Item {
                 font.italic: root.empty
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                clip: true
 
                 horizontalAlignment: root.empty ? Text.AlignHCenter : Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
+                verticalAlignment: root.number > 2 ? Text.AlignTop : Text.AlignVCenter
             }
 
             ImageDefault {

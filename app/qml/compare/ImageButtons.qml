@@ -1,11 +1,10 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls.Material 2.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
 import "../components"
 import "../core"
-
 
 // Image swipewview with buttons
 Item {
@@ -14,8 +13,8 @@ Item {
     property var model
     property int index
     property int bufferSize
-    signal imageLoaded(var image)
-    signal btnDelete()
+    signal imageLoaded(int image)
+    signal btnDelete
 
     ColumnLayout {
 
@@ -31,8 +30,8 @@ Item {
                 id: swipeView
                 model: root.model
                 bufferSize: root.bufferSize
-                onNewIndex: root.index = index
-                onImageLoaded: root.imageLoaded(image)
+                onNewIndex: index => root.index = index
+                onImageLoaded: image => root.imageLoaded(image)
             }
         }
 
@@ -55,7 +54,6 @@ Item {
             ButtonDefault {
                 width: parent.height
                 height: parent.height
-                iconSize: 22
                 icon.source: "qrc:/icons/flaticon/trash.png"
                 onClicked: root.btnDelete()
             }

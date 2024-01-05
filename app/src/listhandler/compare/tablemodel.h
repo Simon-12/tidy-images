@@ -1,28 +1,25 @@
 #ifndef TABLEMODEL_H
 #define TABLEMODEL_H
 
-#include <QObject>
 #include <QAbstractTableModel>
 #include <QDateTime>
-#include <QVector>
+#include <QObject>
 #include <QVariant>
 
-#include "../basefile/imagefile.h"
+#include "../basefile/basefile.h"
 
 /*!
  * \brief The TableModel class:
  * Table model with infos about the compared files.
  */
-class TableModel : public QAbstractTableModel
-{
+class TableModel : public QAbstractTableModel {
     Q_OBJECT
 
 public:
-
     Q_PROPERTY(int threshold READ getThreshold WRITE setThreshold NOTIFY thresholdChanged)
-    Q_PROPERTY(bool   active READ getActive    NOTIFY activeChanged)
+    Q_PROPERTY(bool active READ getActive NOTIFY activeChanged)
 
-    explicit TableModel(FileList* list, int threshold, QObject *parent = nullptr);
+    explicit TableModel(FileList *list, int threshold, QObject *parent = nullptr);
 
     // QAbstractItemModel interface
     int rowCount(const QModelIndex &parent) const;
@@ -30,11 +27,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     QHash<int, QByteArray> roleNames() const;
 
-    enum TableRoles
-    {
-        TextRole = Qt::UserRole + 1,
-        ColorRole
-    };
+    enum TableRoles { TextRole = Qt::UserRole + 1, ColorRole };
 
 public slots:
 
@@ -43,7 +36,6 @@ public slots:
     void setActive(bool state);
 
 private:
-
     int m_columns;
     int m_rows;
     int m_left;
@@ -53,18 +45,19 @@ private:
     QString m_colorDefault;
     QString m_colorEqual;
     QString m_colorMarked;
-    QVector<QString> m_header;
-    FileList* m_fileList;
+    QList<QString> m_header;
+    FileList *m_fileList;
 
     // Columns first -> rows -> cell (text, color)
-    QVector< QVector<QString> > m_tableText; // Stores info from files
-    QVector< QVector<QString*> > m_tableColor; // Stores color for model (pointers)
+    QList<QList<QString> > m_tableText;     // Stores info from files
+    QList<QList<QString *> > m_tableColor;  // Stores color for model (pointers)
 
-    QVector<QString> setFileColumn(int index);
+    QList<QString> setFileColumn(int index);
     void setColor();
-    template <class T> QString *processColor(T &left, T &right);
-    int getThreshold(){ return m_threshold; }
-    bool getActive(){ return m_active; }
+    template <class T>
+    QString *processColor(T &left, T &right);
+    int getThreshold() { return m_threshold; }
+    bool getActive() { return m_active; }
     void setThreshold(int threshold);
 
 signals:
@@ -73,4 +66,4 @@ signals:
     void activeChanged();
 };
 
-#endif // TABLEMODEL_H
+#endif  // TABLEMODEL_H

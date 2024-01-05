@@ -10,11 +10,8 @@
  * \brief The VisionPlugin class:
  * Abstract vision plugin for image processing functions.
  */
-class VisionPlugin : public BasePlugin
-{
-
+class VisionPlugin : public BasePlugin {
 public:
-
     explicit VisionPlugin();
 
     struct Frame {
@@ -22,23 +19,18 @@ public:
         int cols;
         int step;
         double duration;
-        unsigned char* data;
+        unsigned char *data;
     };
 
-    enum ROTATE {
-        CLOCKWISE_90,
-        ROTATE_180,
-        COUNTERCLOCKWISE_90
-    };
+    enum ROTATE { CLOCKWISE_90, ROTATE_180, COUNTERCLOCKWISE_90 };
 
-    virtual bool showImage(const QString &path, double scale = 1.0);
     virtual bool rotateImage(const QString &path, const ROTATE direction);
-    virtual Frame videoFrame(const QString &path, double position = 0.01, double scale = 0.25, bool showImage = false);
+    virtual Frame videoFrame(const QString &path, double position = 1000);
     virtual bool initMatching(const QString &original, int matchingOption = 0);
-    virtual double matchImage(const QString &path, bool printResults = false, bool showImage = false);
+    virtual double matchImage(const QString &path, bool printResults = false);
 };
 
 // Declare interface
 Q_DECLARE_INTERFACE(VisionPlugin, "plugin.vision")
 
-#endif // VISIONPLUGIN_H
+#endif  // VISIONPLUGIN_H

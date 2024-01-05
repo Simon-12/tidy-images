@@ -1,0 +1,11 @@
+# -----------------------------
+# Options affecting formatting.
+# -----------------------------
+with section("format"):
+
+	# A list of command names which should always be wrapped
+	always_wrap = ['project', 'target_link_libraries']
+	
+	# If a positional argument group contains more than this many arguments, then
+	# force it to a vertical layout.
+	max_pargs_hwrap = 4

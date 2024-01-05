@@ -1,16 +1,15 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 import "../components"
-
 
 // Empty view item
 Item {
 
     id: root
     anchors.fill: parent
-    signal changePath()
+    signal changePath
 
     ColumnLayout {
 

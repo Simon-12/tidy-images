@@ -1,15 +1,14 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Window 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Window
+import QtQuick.Layouts
 
-import qml.options 1.0
+import qml.components
 import "dialogs"
 import "labelbar"
 import "compare"
 import "database"
 import "core"
-
 
 ApplicationWindow {
 
@@ -23,11 +22,12 @@ ApplicationWindow {
         // Center window on startup
         root.x = (Screen.desktopAvailableWidth / 2) - (width / 2)
         root.y = (Screen.desktopAvailableHeight / 2) - (height / 2)
+        controller.startLoadFiles(false)
     }
 
     menuBar: MenuBarMain {
         mode: controller.mode
-        database: controller.listModels.databaseActive
+        database: controller.databaseActive
         onDlgNewFolder: dlgFolder.open()
         onDlgSettings: dlgSettings.open()
         onDlgHistory: dlgHistory.open()
@@ -37,7 +37,7 @@ ApplicationWindow {
         onFolderFavorites: controller.openExplorer(Options.Favorites)
         onFolderTrash: controller.openExplorer(Options.Trash)
         onRefreshUI: controller.updateController()
-        onChangeMode: controller.changeMode(newMode)
+        onChangeMode: newMode => controller.changeMode(newMode)
         onChangePath: controller.changeCurrentPath()
         onDlgPlugins: dlgPlugin.open()
         onDlgInfo: dlgInfo.open()
@@ -49,8 +49,8 @@ ApplicationWindow {
         mode: controller.mode
         isFullscreen: controller.fullscreen
         model: controller.listModels.labels
-        onAddLabel: controller.addLabel(string)
-        onRemoveLabel: controller.removeLabel(num)
+        onAddLabel: name => controller.addLabel(name)
+        onRemoveLabel: num => controller.removeLabel(num)
     }
 
     footer: StatusBarMain {
@@ -66,8 +66,8 @@ ApplicationWindow {
         StackLayout {
 
             currentIndex: controller.mode
-            // fillWidth + fillHeight is on true by default
 
+            // fillWidth + fillHeight is on true by default
             Loader {
                 id: galleryView
                 active: controller.mode === Options.Gallery
@@ -91,7 +91,7 @@ ApplicationWindow {
                     bufferSize: controller.loader.bufferSize
                     onIndexUp: controller.index++
                     onIndexDown: controller.index--
-                    onImageLoaded: controller.loader.loadImage(image)
+                    onImageLoaded: image => controller.loader.loadImage(image)
                 }
             }
 
@@ -101,7 +101,7 @@ ApplicationWindow {
                 sourceComponent: VideoItem {
                     source: controller.file
                 }
-            }            
+            }
 
             Loader {
                 active: controller.mode === Options.Compare
@@ -110,10 +110,10 @@ ApplicationWindow {
                     table: controller.listModels.table
                     progress: controller.loader.step
                     bufferSize: controller.loader.bufferSize
-                    onImageLoaded: controller.loader.loadImage(image)
-                    onBtnDelete: controller.deleteFile(index)
+                    onImageLoaded: image => controller.loader.loadImage(image)
+                    onBtnDelete: index => controller.deleteFile(index)
                     onStopCompare: controller.stopCompare()
-                    onStartCompare: {
+                    onStartCompare: function (index) {
                         controller.loader.step = 0
                         controller.startCompare(index)
                     }
@@ -147,17 +147,26 @@ ApplicationWindow {
             model: controller.selected
             onIndexUp: controller.index++
             onIndexDown: controller.index--
-            onBtnFolder: controller.moveFile(path)
+            onBtnFolder: function (path) {
+                if (controller.mode === Options.Gallery)
+                    galleryView.item.view.close()
+                controller.moveFile(path)
+            }
             onBtnFavorit: controller.fileFavorit()
             onBtnCopy: controller.copyFile()
-            onBtnDelete: controller.deleteFile()
+            onBtnDelete: {
+                if (controller.mode === Options.Gallery)
+                    galleryView.item.view.close()
+                controller.deleteFile()
+            }
             onBtnClear: controller.listModels.files.clearSelected()
-            onCmbOrder: controller.changeOrder(order)
-            onCmbDirection: controller.changeDirection(direction)
-            onBtnRotate: {
-                if(controller.mode === Options.Image)
+            onCmbOrder: order => controller.changeOrder(order)
+            onCmbDirection: direction => controller.changeDirection(direction)
+            onBtnAddFolder: dlgFolder.open()
+            onBtnRotate: function (direction) {
+                if (controller.mode === Options.Image)
                     imageView.item.rotateImage(direction)
-                if(controller.mode === Options.Gallery)
+                if (controller.mode === Options.Gallery)
                     galleryView.item.view.rotateImage(direction)
                 controller.setRotation(direction)
             }
@@ -185,10 +194,11 @@ ApplicationWindow {
         database: controller.paths.database
         favorites: controller.paths.favorites
         trash: controller.paths.trash
-        isDatabase: controller.mode === Options.Database
-        onChangePath: controller.changePath(path, option)
+        databaseActive: controller.databaseActive
+        onChangePath: (path, option) => controller.changePath(path, option)
         onAddDatabase: controller.addToDatabase()
         onRemoveDatabase: controller.removeFromDatabase()
+        onChangeDatabase: option => controller.databaseActive = option
     }
 
     DialogHistory {
@@ -209,41 +219,77 @@ ApplicationWindow {
     FocusHandler {
         id: focusHandler
         Keys.onRightPressed: {
-            switch(controller.mode)
-            {
-            case Options.Image: controller.index++; break
-            case Options.Video: videoView.item.seekUp(); break
-            case Options.Gallery: galleryView.item.view.seekUp(); break
-            case Options.Database: database.item.view.seekUp(); break
-            default: break
+            switch (controller.mode) {
+            case Options.Image:
+                controller.index++
+                break
+            case Options.Video:
+                videoView.item.seekUp()
+                break
+            case Options.Gallery:
+                galleryView.item.view.seekUp()
+                break
+            case Options.Database:
+                database.item.view.seekUp()
+                break
+            default:
+                break
             }
         }
         Keys.onLeftPressed: {
-            switch(controller.mode)
-            {
-            case Options.Image: controller.index--; break
-            case Options.Video: videoView.item.seekDown(); break
-            case Options.Gallery: galleryView.item.view.seekDown(); break
-            case Options.Database: database.item.view.seekDown(); break
-            default: break
+            switch (controller.mode) {
+            case Options.Image:
+                controller.index--
+                break
+            case Options.Video:
+                videoView.item.seekDown()
+                break
+            case Options.Gallery:
+                galleryView.item.view.seekDown()
+                break
+            case Options.Database:
+                database.item.view.seekDown()
+                break
+            default:
+                break
             }
         }
         Keys.onUpPressed: {
-            if(controller.mode === Options.Database)
+            if (controller.mode === Options.Database)
                 database.item.view.indexDown()
         }
         Keys.onDownPressed: {
-            if(controller.mode === Options.Database)
+            if (controller.mode === Options.Database)
                 database.item.view.indexUp()
         }
         Keys.onSpacePressed: {
-            switch(controller.mode)
-            {
-            case Options.Video: videoView.item.pause(); break
-            case Options.Gallery: galleryView.item.view.pause(); break
-            case Options.Database: database.item.view.pause(); break
-            default: break
+            switch (controller.mode) {
+            case Options.Video:
+                videoView.item.pause()
+                break
+            case Options.Gallery:
+                galleryView.item.view.pause()
+                break
+            case Options.Database:
+                database.item.view.pause()
+                break
+            default:
+                break
             }
+        }
+
+        // Selects multiple items on STRG pressed
+        Keys.onPressed: function (event) {
+            if (controller.mode !== Options.Gallery)
+                return
+            if (event.key === Qt.Key_Control)
+                controller.listModels.files.setMultiple(true)
+        }
+        Keys.onReleased: function (event) {
+            if (controller.mode !== Options.Gallery)
+                return
+            if (event.key === Qt.Key_Control)
+                controller.listModels.files.setMultiple(false)
         }
     }
     onFocusObjectChanged: focusHandler.checkFocus(activeFocusItem)

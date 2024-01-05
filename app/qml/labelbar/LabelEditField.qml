@@ -1,8 +1,7 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 import "../components"
-
 
 // Label edit field
 Item {
@@ -12,7 +11,7 @@ Item {
 
     property bool selected: false
     property int duration: 300
-    signal addItem(var string)
+    signal addItem(string name)
 
     // Edit text field
     TextField {
@@ -24,7 +23,7 @@ Item {
 
         // length and contentWidth are properties of TextField
         onLengthChanged: {
-            if(contentWidth > 40)
+            if (contentWidth > 40)
                 width = contentWidth + 20
             else
                 width = 50
@@ -62,7 +61,7 @@ Item {
         text: "+"
 
         onClicked: {
-            if(!root.selected)
+            if (!root.selected)
                 root.state = "open"
             else
                 root.state = "close"
@@ -73,22 +72,53 @@ Item {
     states: [
         State {
             name: "open"
-            PropertyChanges { target: root; selected: true}
-            PropertyChanges { target: editField; width: 50; focus: true; text: "" }
-            PropertyChanges { target: addButton; rotation: 45; objectName: "item lock" }
+            PropertyChanges {
+                target: root
+                selected: true
+            }
+            PropertyChanges {
+                target: editField
+                width: 50
+                focus: true
+                text: ""
+            }
+            PropertyChanges {
+                target: addButton
+                rotation: 45
+                objectName: "item lock"
+            }
         },
         State {
             name: "close"
-            PropertyChanges { target: root; selected: false}
-            PropertyChanges { target: editField; width: 0; focus: false; text: "" }
-            PropertyChanges { target: addButton; rotation: 0; objectName: "item unlock" }
+            PropertyChanges {
+                target: root
+                selected: false
+            }
+            PropertyChanges {
+                target: editField
+                width: 0
+                focus: false
+                text: ""
+            }
+            PropertyChanges {
+                target: addButton
+                rotation: 0
+                objectName: "item unlock"
+            }
         }
     ]
     transitions: [
         Transition {
             ParallelAnimation {
-                NumberAnimation { target: editField; properties: "width"; duration: root.duration }
-                RotationAnimation { target: addButton; duration: root.duration }
+                NumberAnimation {
+                    target: editField
+                    properties: "width"
+                    duration: root.duration
+                }
+                RotationAnimation {
+                    target: addButton
+                    duration: root.duration
+                }
             }
         }
     ]

@@ -6,17 +6,13 @@
 #include "../basefile/basefile.h"
 #include "../database/database.h"
 #include "../models/imagemodel.h"
-#include "support.h"
 
 /*!
  * \brief The CommandData class:
  * Command data for the command classes.
  */
-class CommandData
-{
-
+class CommandData {
 public:
-
     int index;
     FilePtr file;
     QString source;
@@ -28,4 +24,4 @@ public:
     Database* database;
 };
 
-#endif // COMMANDDATA_H
+#endif  // COMMANDDATA_H

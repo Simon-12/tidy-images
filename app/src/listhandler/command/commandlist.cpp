@@ -1,10 +1,13 @@
 #include "commandlist.h"
 
+#include "copycommand.h"
+#include "favoritecommand.h"
+#include "movecommand.h"
+#include "movelistcommand.h"
 
-CommandList::CommandList(FileList* list, Settings set, QObject *parent) : QObject(parent)
-{
+CommandList::CommandList(FileList *list, Settings set, QObject *parent) : QObject(parent) {
     m_fileList = list;
-    m_path = set.path + "/"; // add seperator here
+    m_path = set.path + "/";  // add seperator here
     m_trash = set.trash;
     m_favorites = set.favorites;
     m_undoStack = new QUndoStack(this);
@@ -19,22 +22,19 @@ CommandList::CommandList(FileList* list, Settings set, QObject *parent) : QObjec
     connect(&m_watcher, &QFutureWatcher<void>::finished, this, &CommandList::finished);
 }
 
-
-bool CommandList::moveFile(int index, const QString &path)
-{
-    if(!checkIndex(index)) return false;
-    if(path.isEmpty()) return false;
+bool CommandList::moveFile(int index, const QString &path) {
+    if (!checkIndex(index)) return false;
+    if (path.isEmpty()) return false;
 
     // Add to UndoStack and run redo()
     CommandData data = createCommand(index, path);
-    int rotation     = *data.file->rotation();
-    data.file->resetRotation(); // Get and reset rotation
+    int rotation = *data.file->rotation();
+    data.file->resetRotation();  // Get and reset rotation
     m_undoStack->push(new MoveCommand(data));
 
     // Rotate image
-    if(rotation != 0)
-    {
-        m_future = QtConcurrent::run(this, &CommandList::rotateThread, data.target, rotation);
+    if (rotation != 0) {
+        m_future = QtConcurrent::run(&CommandList::rotateThread, this, data.target, rotation);
         m_watcher.setFuture(m_future);
     }
 
@@ -42,24 +42,27 @@ bool CommandList::moveFile(int index, const QString &path)
     return true;
 }
 
-
-bool CommandList::moveFiles(const QString &path)
-{
-    QVector<int> selected = selectedFiles(true);
-    if(selected.isEmpty()) return false;
+bool CommandList::moveFiles(const QString &path) {
+    QList<int> selected = selectedFiles(true);
+    if (selected.isEmpty()) return false;
+    QList<CommandData> list;
 
     beginMacro();
-    foreach(int i, selected)
-        moveFile(i, path);
+    foreach (int i, selected) {
+        CommandData data = createCommand(i, path);
+        list.append(data);
+    }
+    // Add to UndoStack and run redo()
+    m_undoStack->push(new MoveListCommand(list));
     endMacro();
+
+    qInfo() << "Move to: " + path;
     return true;
 }
 
-
-bool CommandList::copyFile(int index, const QString &path)
-{
-    if(!checkIndex(index)) return false;
-    if(path.isEmpty()) return false;
+bool CommandList::copyFile(int index, const QString &path) {
+    if (!checkIndex(index)) return false;
+    if (path.isEmpty()) return false;
 
     // Add to UndoStack and run redo()
     CommandData data = createCommand(index, path);
@@ -69,41 +72,22 @@ bool CommandList::copyFile(int index, const QString &path)
     return true;
 }
 
-
-bool CommandList::copyFiles(const QString &path)
-{
-    QVector<int> selected = selectedFiles();
-    if(selected.isEmpty()) return false;
+bool CommandList::copyFiles(const QString &path) {
+    QList<int> selected = selectedFiles();
+    if (selected.isEmpty()) return false;
 
     beginMacro();
-    foreach(int i, selected)
-        copyFile(i, path);
+    foreach (int i, selected) copyFile(i, path);
     endMacro();
     return true;
 }
 
+bool CommandList::moveTrash(int index) { return moveFile(index, m_trash); }
 
-bool CommandList::moveTrash(int index)
-{
-    return moveFile(index, m_trash);
-}
+bool CommandList::moveFilesTrash() { return moveFiles(m_trash); }
 
-
-bool CommandList::moveFilesTrash()
-{
-    QVector<int> selected = selectedFiles(true);
-    if(selected.isEmpty()) return false;
-    beginMacro();
-    foreach(int i, selected)
-        moveTrash(i);
-    endMacro();
-    return true;
-}
-
-
-bool CommandList::setFavorite(int index)
-{
-    if(!checkIndex(index)) return false;
+bool CommandList::setFavorite(int index) {
+    if (!checkIndex(index)) return false;
 
     // Add to UndoStack and run redo()
     CommandData data = createCommand(index, m_favorites);
@@ -111,50 +95,32 @@ bool CommandList::setFavorite(int index)
     return true;
 }
 
-
-bool CommandList::setFilesFavorite()
-{
-    QVector<int> selected = selectedFiles();
-    if(selected.isEmpty()) return false;
+bool CommandList::setFilesFavorite() {
+    QList<int> selected = selectedFiles();
+    if (selected.isEmpty()) return false;
 
     beginMacro();
-    foreach(int i, selected)
-        setFavorite(i);
+    foreach (int i, selected) setFavorite(i);
     endMacro();
     return true;
 }
 
+void CommandList::undo() { m_undoStack->undo(); }
 
-void CommandList::undo()
-{
-    m_undoStack->undo();
-}
+void CommandList::redo() { m_undoStack->redo(); }
 
-
-void CommandList::redo()
-{
-    m_undoStack->redo();
-}
-
-
-void CommandList::setFileModel(FileModel *fileModel)
-{
+void CommandList::setFileModel(FileModel *fileModel) {
     m_dataDefault.fileModel = fileModel;
     m_fileModel = fileModel;
 }
 
-
-void CommandList::setPlugins(ExivPlugin *exiv, VisionPlugin *vision)
-{
+void CommandList::setPlugins(ExivPlugin *exiv, VisionPlugin *vision) {
     m_exivPlugin = exiv;
     m_visionPlugin = vision;
 }
 
-
-bool CommandList::checkIndex(int index)
-{
-    if(index < 0 || index >= m_fileList->size())
-    {
+bool CommandList::checkIndex(int index) {
+    if (index < 0 || index >= m_fileList->size()) {
         qInfo() << "Index out of range";
         return false;
     }
@@ -162,90 +128,77 @@ bool CommandList::checkIndex(int index)
     return true;
 }
 
-
-CommandData CommandList::createCommand(int index, const QString &path)
-{
-    QString file     = *m_fileList->at(index)->name();
+CommandData CommandList::createCommand(int index, const QString &path) {
+    QString file = *m_fileList->at(index)->name();
     CommandData data = m_dataDefault;
-    data.index       = index;
-    data.source      = m_path + file;
-    data.target      = path +"/"+ file;
-    data.file        = m_fileList->at(index);
+    data.index = index;
+    data.source = m_path + file;
+    data.target = path + "/" + file;
+    data.file = m_fileList->at(index);
 
     m_model->append(data);
     return data;
 }
 
-
-void CommandList::rotateThread(QString path, int rotation)
-{
+void CommandList::rotateThread(QString path, int rotation) {
     VisionPlugin::ROTATE rotate;
-    switch (rotation)
-    {
-    case 90:  rotate = VisionPlugin::CLOCKWISE_90;        break;
-    case 180: rotate = VisionPlugin::ROTATE_180;          break;
-    case 270: rotate = VisionPlugin::COUNTERCLOCKWISE_90; break;
-    default:  return;
+    switch (rotation) {
+        case 90:
+            rotate = VisionPlugin::CLOCKWISE_90;
+            break;
+        case 180:
+            rotate = VisionPlugin::ROTATE_180;
+            break;
+        case 270:
+            rotate = VisionPlugin::COUNTERCLOCKWISE_90;
+            break;
+        default:
+            return;
     }
 
-    if(!m_visionPlugin) return;
-    if(m_exivPlugin) m_exivPlugin->readMetadata(path);
+    if (!m_visionPlugin) return;
+    if (m_exivPlugin) m_exivPlugin->readMetadata(path);
     m_visionPlugin->rotateImage(path, rotate);
-    if(m_exivPlugin) m_exivPlugin->writeMetadata(path);
+    if (m_exivPlugin) m_exivPlugin->writeMetadata(path);
 }
 
-
-void CommandList::beginMacro()
-{
+void CommandList::beginMacro() {
     m_undoStack->beginMacro("Start");
     m_model->beginMacro();
 }
 
-
-void CommandList::endMacro()
-{
+void CommandList::endMacro() {
     m_undoStack->endMacro();
     m_model->endMacro();
 }
 
-
-QVector<int> CommandList::selectedFiles(bool clear)
-{
-    QVector<int> selected = m_fileModel->selected();
+QList<int> CommandList::selectedFiles(bool clear) {
+    QList<int> selected = m_fileModel->selected();
     std::sort(selected.begin(), selected.end(), std::greater<int>());
-    if(clear)
-        m_fileModel->clearSelected();
+    if (clear) m_fileModel->clearSelected();
     return selected;
 }
 
+void CommandList::started() { m_timer.start(); }
 
-void CommandList::started()
-{
-    m_timer.start();
-}
-
-
-void CommandList::finished()
-{
+void CommandList::finished() {
     QString time = QString::number(m_timer.elapsed());
     qInfo() << "Single process Time: " + time + " ms";
 }
 
+void CommandList::changeIndex(int index) {
+    if (m_undoStack->count() == index) index -= 1;  // Take last index
 
-void CommandList::changeIndex(int index)
-{
     // Get command on stack
-    const QUndoCommand* cmd = m_undoStack->command(index);
-    if(!cmd)
-    {
+    const QUndoCommand *cmd = m_undoStack->command(index);
+    if (!cmd) {
         emit indexChanged(-1);
         return;
     }
 
     // Get index
-    const BaseCommand* data = dynamic_cast<const BaseCommand*>(cmd);
-    if(!data)
-    {
+    const BaseCommand *data = dynamic_cast<const BaseCommand *>(cmd);
+    if (!data) {
         emit indexChanged(-1);
         return;
     }

@@ -2,22 +2,20 @@
 #define SQLHANDLER_H
 
 #include <QObject>
-#include <QtSql>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QtSql>
 
-#include "../basefile/videofile.h"
+#include "../basefile/basefile.h"
 
 /*!
  * \brief The SqlHandler class:
  * Sql handler for the database.
  */
-class SqlHandler : public QObject
-{
+class SqlHandler : public QObject {
     Q_OBJECT
 
 public:
-
     explicit SqlHandler(QString name, QString path, QObject *parent = nullptr, bool debug = false);
     ~SqlHandler();
 
@@ -27,7 +25,6 @@ public:
     QSqlDatabase database();
 
 private:
-
     QString m_name;
     QString m_path;
     bool m_debug;
@@ -40,4 +37,4 @@ private:
     void closeDatabase();
 };
 
-#endif // SQLHANDLER_H
+#endif  // SQLHANDLER_H

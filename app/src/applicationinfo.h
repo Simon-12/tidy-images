@@ -1,11 +1,12 @@
 #ifndef APPLICATIONINFO_H
 #define APPLICATIONINFO_H
 
-#include <QObject>
-#include <QDirIterator>
-#include <QFontDatabase>
 #include <QDebug>
+#include <QDirIterator>
 #include <QFile>
+#include <QFontDatabase>
+#include <QObject>
+#include <QQmlEngine>
 
 #include "iconmodel.h"
 
@@ -14,34 +15,34 @@
  * Informations about the application.
  * Handles the icon model and loads the fonts.
  */
-class ApplicationInfo : public QObject
-{
+class ApplicationInfo : public QObject {
     Q_OBJECT
+    QML_ELEMENT
 
 public:
+    Q_PROPERTY(QString about READ getAbout CONSTANT)
+    Q_PROPERTY(QString story READ getStory CONSTANT)
+    Q_PROPERTY(QString paypal READ getPaypal CONSTANT)
+    Q_PROPERTY(QString btc READ getBtc CONSTANT)
+    Q_PROPERTY(QString website READ getWebsite CONSTANT)
+    Q_PROPERTY(QString license READ getLicense CONSTANT)
+    Q_PROPERTY(QString qtinfo READ getQtInfo CONSTANT)
+    Q_PROPERTY(QString font READ getFont CONSTANT)
+    Q_PROPERTY(IconModel* model READ getModel CONSTANT)
 
-    Q_PROPERTY(QString about    READ getAbout   CONSTANT)
-    Q_PROPERTY(QString story    READ getStory   CONSTANT)
-    Q_PROPERTY(QString paypal   READ getPaypal  CONSTANT)
-    Q_PROPERTY(QString btc      READ getBtc     CONSTANT)
-    Q_PROPERTY(QString website  READ getWebsite CONSTANT)
-    Q_PROPERTY(QString license  READ getLicense CONSTANT)
-    Q_PROPERTY(QString qtinfo   READ getQtInfo  CONSTANT)
-    Q_PROPERTY(IconModel* model READ getModel   CONSTANT)
-
-    explicit ApplicationInfo(QObject *parent = nullptr);
+    explicit ApplicationInfo(QObject* parent = nullptr);
     static void loadFonts();
 
 private:
-
-    QString getAbout(){ return m_about; }
-    QString getStory(){ return m_story; }
-    QString getPaypal(){ return m_paypal; }
-    QString getBtc(){ return m_btc; }
-    QString getWebsite(){ return m_website; }
-    QString getLicense(){ return m_license; }
-    QString getQtInfo(){ return m_QtInfo; }
-    IconModel* getModel(){ return m_model; }
+    QString getAbout() { return m_about; }
+    QString getStory() { return m_story; }
+    QString getPaypal() { return m_paypal; }
+    QString getBtc() { return m_btc; }
+    QString getWebsite() { return m_website; }
+    QString getLicense() { return m_license; }
+    QString getQtInfo() { return m_QtInfo; }
+    QString getFont() { return m_font; }
+    IconModel* getModel() { return m_model; }
     void initFlatIcons();
     void initMaterialIcons();
 
@@ -54,7 +55,8 @@ private:
     QString m_version;
     QString m_license;
     QString m_QtInfo;
+    QString m_font;
     IconModel* m_model;
 };
 
-#endif // APPLICATIONINFO_H
+#endif  // APPLICATIONINFO_H
